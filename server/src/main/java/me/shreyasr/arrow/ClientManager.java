@@ -91,6 +91,8 @@ public class ClientManager {
                     for (ProjectileModel projectile : projectiles.values()) {
                         damageTaken += (PlayerProjectileCollisionDetector.hasCollided(player,
                                 projectile) ? 1 : 0)*DAMAGE;
+                        projectiles.remove(projectile.projectileID);
+                        //but client is still rendering projectile
                     }
                     player.health -= damageTaken;
                     packetQueue.add(PlayerPacketHandler.encodePacket(playerId, player.health, x, y, direction));

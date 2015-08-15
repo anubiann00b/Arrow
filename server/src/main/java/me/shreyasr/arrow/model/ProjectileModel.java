@@ -4,7 +4,7 @@ import me.shreyasr.arrow.model.util.Projectile;
 
 public class ProjectileModel {
 
-    private final int projectileID;
+    public final int projectileID;
     private Projectile projectile;
     public final int playerID;
     private static final int LENGTH = 16*4;
