@@ -36,7 +36,7 @@ public abstract class BaseEntity {
         /* If you want the name at the top */
         //dispname.draw(batch, name, pos.x-sprite.getWidth()/2, pos.y + sprite.getHeight() / 2+20);
         /* If you want the name at the bottom */
-        dispname.draw(batch, name, pos.x-sprite.getWidth()/2, pos.y - sprite.getHeight() / 2);
+        dispname.draw(batch, name, pos.x-sprite.getWidth()/2, pos.y - sprite.getHeight() / 2 - 2);
     }
 
     public void renderstatus(ShapeRenderer healthbar){

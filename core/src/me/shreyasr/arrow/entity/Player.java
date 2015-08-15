@@ -3,12 +3,15 @@ package me.shreyasr.arrow.entity;
 import me.shreyasr.arrow.input.PlayerInputMethod;
 import me.shreyasr.arrow.util.CartesianPosition;
 
+import static com.badlogic.gdx.math.MathUtils.random;
+
+
 public class Player extends BaseEntity {
 
     private PlayerInputMethod inputMethod;
 
     public Player(PlayerInputMethod inputMethod) {
-        super("player", "playername101");
+        super("player", "player"+Integer.toString(random(10000)));
         this.inputMethod = inputMethod;
     }
 
