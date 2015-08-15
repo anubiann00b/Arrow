@@ -15,6 +15,10 @@ public class Obstacle {
         position = oPosition;
     }
 
+    private CartesianPosition getPosition() {
+        return position;
+    }
+
     public boolean update() {
         return false;
     }
