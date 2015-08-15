@@ -15,7 +15,7 @@ public abstract class BaseEntity {
     public int dir;
     public CartesianPosition pos;
     protected final double speed = 5;
-    String name;
+    public String name;
     public int health;
     ShapeRenderer healthbar;
     BitmapFont dispname;
