@@ -39,13 +39,13 @@ public class Projectile {
     public boolean update() {
         long currentTime = System.currentTimeMillis();
         long timePassed = currentTime - beginningTime;
-        float newX = startPos.x + (float) (velocity.speed*Math.cos(velocity.direction)*timePassed/100f);
-        float newY = startPos.y + (float) (velocity.speed*Math.sin(velocity.direction)*timePassed/100f);
+        float newX = startPos.x + (float) (velocity.getSpeed()*Math.cos(velocity.getDirection())*timePassed/100f);
+        float newY = startPos.y + (float) (velocity.getSpeed()*Math.sin(velocity.getDirection())*timePassed/100f);
         position = new CartesianPosition(newX, newY);
         return position.isInWorld(196);
     }
 
     public void render(SpriteBatch batch) {
-        image.render(batch, position, 4.0f, (float) velocity.direction);
+        image.render(batch, position, 4.0f, (float) velocity.getDirection());
     }
 }

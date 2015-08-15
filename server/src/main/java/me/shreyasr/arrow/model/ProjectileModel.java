@@ -1,19 +1,20 @@
 package me.shreyasr.arrow.model;
 
+import me.shreyasr.arrow.model.util.Projectile;
+
 public class ProjectileModel {
 
     private final int projectileID;
-    public int x;
-    public int y;
+    private Projectile projectile;
     private final PlayerModel shooter;
     private final int damage;
-    private float direction;
-    private float speed;
     private static final int LENGTH = 16*4;
     private static final int CENTER_X = 7*4;
     private static final int CENTER_Y = 7*4;
 
-    public ProjectileModel(int projectileID, PlayerModel shooter, int damage) {
+    public ProjectileModel(int projectileID, PlayerModel shooter, int damage,
+                           Projectile projectile) {
+        this.projectile = projectile;
         this.projectileID = projectileID;
         this.shooter = shooter;
         this.damage = damage;
@@ -31,8 +32,20 @@ public class ProjectileModel {
         return CENTER_Y;
     }
 
-    public float getDirection() {
-        return direction;
+    public double getDirection() {
+        return projectile.getVelocity().getDirection();
+    }
+
+    public float getSpeed() {
+        return projectile.getVelocity().getSpeed();
+    }
+
+    public float getX() {
+        return projectile.getPosition().x;
+    }
+
+    public float getY() {
+        return projectile.getPosition().y;
     }
 
     public boolean update() {
