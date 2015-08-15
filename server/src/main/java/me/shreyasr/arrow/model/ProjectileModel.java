@@ -5,14 +5,18 @@ public class ProjectileModel {
     private final int projectileID;
     public int x;
     public int y;
+    private final PlayerModel shooter;
+    private final int damage;
     private float direction;
     private float speed;
     private static final int LENGTH = 16*4;
     private static final int CENTER_X = 7*4;
     private static final int CENTER_Y = 7*4;
 
-    public ProjectileModel(int projectileID) {
+    public ProjectileModel(int projectileID, PlayerModel shooter, int damage) {
         this.projectileID = projectileID;
+        this.shooter = shooter;
+        this.damage = damage;
     }
 
     public int getLength() {
@@ -33,6 +37,10 @@ public class ProjectileModel {
 
     public boolean update() {
         return true;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
 }

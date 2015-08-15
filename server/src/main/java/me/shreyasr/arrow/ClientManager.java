@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.shreyasr.arrow.model.PlayerModel;
+import me.shreyasr.arrow.model.PlayerProjectileCollisionDetector;
 import me.shreyasr.arrow.model.ProjectileModel;
 
 public class ClientManager {
@@ -83,6 +84,13 @@ public class ClientManager {
                     player.y = y;
                     player.direction = direction;
 
+                    int damageTaken = 0;
+                    for (ProjectileModel projectile : projectiles.values()) {
+                        damageTaken += (PlayerProjectileCollisionDetector.hasCollided(player,
+                                projectile) ? 1 : 0)*projectile.getDamage();
+                    }
+                    health -= damageTaken;
+                    player.health = health;
                     packetQueue.add(PlayerPacketHandler.encodePacket(playerId, health, x, y, direction));
                 }
             }
@@ -91,13 +99,13 @@ public class ClientManager {
             @Override
             public void onReceive(int playerId, int projectileId, int startX, int startY,
                                   long startTime, double direction, int velocity) {
-
+                //???
             }
         });
         packetRouter.collisionPacketHandler.addListener(new CollisionPacketHandler.Listener() {
             @Override
             public void onReceive(int projectileId, int playerId, int hitPlayerId) {
-
+                //when you get a collision, update scores.health etc
             }
         });
     }
