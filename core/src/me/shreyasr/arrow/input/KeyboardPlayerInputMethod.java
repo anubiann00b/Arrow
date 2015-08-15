@@ -3,19 +3,19 @@ package me.shreyasr.arrow.input;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import me.shreyasr.arrow.util.Position;
+import me.shreyasr.arrow.util.CartesianPosition;
 
 public class KeyboardPlayerInputMethod extends PlayerInputMethod {
 
-    Position pos = new Position();
+    CartesianPosition pos = new CartesianPosition();
 
     @Override
-    public Position getMovement() {
+    public CartesianPosition getMovement() {
         return pos;
     }
 
     @Override
-    public Position getAttack() {
+    public CartesianPosition getAttack() {
         return null;
     }
 

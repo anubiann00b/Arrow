@@ -1,7 +1,7 @@
 package me.shreyasr.arrow.entity;
 
 import me.shreyasr.arrow.input.PlayerInputMethod;
-import me.shreyasr.arrow.util.Position;
+import me.shreyasr.arrow.util.CartesianPosition;
 
 public class Player extends BaseEntity {
 
@@ -18,8 +18,8 @@ public class Player extends BaseEntity {
         return false;
     }
 
-    private void updatePosition(Position movement, double delta) {
-        Position dpos = movement.scale((float)(delta*speed));
+    private void updatePosition(CartesianPosition movement, double delta) {
+        CartesianPosition dpos = movement.scale((float)(delta*speed));
 
         pos = pos.add(dpos);
 

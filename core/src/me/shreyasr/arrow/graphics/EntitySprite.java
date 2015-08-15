@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import me.shreyasr.arrow.util.Position;
+import me.shreyasr.arrow.util.CartesianPosition;
 
 public class EntitySprite {
 
-    private Position scale;
+    private CartesianPosition scale;
 
     private Animation[] animations;
 //    private ImageMask[][] masks;
@@ -21,7 +21,7 @@ public class EntitySprite {
     private int currentFrame = 0;
 
     public EntitySprite(String filePrefix, int fps, int size) {
-        scale = new Position(size, size);
+        scale = new CartesianPosition(size, size);
         animations = new Animation[4];
 //        masks = new ImageMask[4][];
         animSpeed = fps;
@@ -31,7 +31,7 @@ public class EntitySprite {
         this.loadAnim(filePrefix + "_down.png", 3);
     }
 
-    public void render(SpriteBatch batch, int delta, Position p) {
+    public void render(SpriteBatch batch, int delta, CartesianPosition p) {
         count += delta;
         currentFrame = animations[directionFacing].getKeyFrameIndex(count);
         batch.draw(animations[directionFacing].getKeyFrames()[currentFrame],
@@ -65,11 +65,11 @@ public class EntitySprite {
 //        return masks[directionFacing][currentFrame];
 //    }
 
-//    public boolean isCollision(Projectile p, Position pos) {
+//    public boolean isCollision(Projectile p, CartesianPosition pos) {
 //        return getMask().intersects(p, pos);
 //    }
 
-//    public boolean isCollision(Entity e, Position pos) {
+//    public boolean isCollision(Entity e, CartesianPosition pos) {
 //        return getMask().intersects(e.sprite.getMask(), pos, e.pos);
 //    }
 }
