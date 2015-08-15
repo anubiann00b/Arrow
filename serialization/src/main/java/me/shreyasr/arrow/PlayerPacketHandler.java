@@ -7,6 +7,8 @@ import java.util.List;
 public class PlayerPacketHandler implements PacketHandler {
 
 
+    public static int type = 0;
+
     public static byte[] encodePacket(int playerId, int health, int x, int y, int direction){
         return ByteBuffer.wrap(new byte[16]).putInt(playerId).putInt(health).putInt(x).putInt(y).putInt(y).array();
     }

@@ -7,6 +7,7 @@ import java.util.List;
 import me.shreyasr.arrow.PacketHandler;
 
 public class CollisionPacketHandler implements PacketHandler {
+    public static int type = 3;
     /* order: projectileId, playerId, hitPlayerId */
 
     public static byte[] encodePacket(int projectileId, int playerId, int hitPlayerId) {

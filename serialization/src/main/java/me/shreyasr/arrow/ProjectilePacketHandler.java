@@ -6,6 +6,8 @@ import java.util.List;
 
 public class ProjectilePacketHandler implements PacketHandler {
 
+    public static int type=1;
+
     public static byte[] encodePacket(int playerId, int projectileId, int startX, int startY,
                                       long startTime, double direction, int velocity) {
         return ByteBuffer.wrap(new byte[36])
