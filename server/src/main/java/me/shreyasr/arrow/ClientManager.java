@@ -3,6 +3,7 @@ package me.shreyasr.arrow;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -44,12 +45,15 @@ public class ClientManager {
 
     private void updateClients() {
         synchronized (packetQueue) {
-            for (Client client : clients) {
+            for (Iterator<Client> iterator = clients.iterator(); iterator.hasNext(); ) {
+                Client client = iterator.next();
                 for (byte[] packet : packetQueue) {
                     try {
                         client.socket.getOutputStream().write(packet);
                     } catch (IOException e) {
                         Log.exception(e);
+                        iterator.remove();
+                        Log.m("Removed client: " + client.id);
                     }
                 }
             }
