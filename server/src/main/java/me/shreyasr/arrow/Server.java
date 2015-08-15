@@ -15,8 +15,9 @@ public class Server {
             ServerSocket serverSocket = new ServerSocket(9999);
             while (true) {
                 try {
+                    Log.m("Waiting for client!");
                     Socket client = serverSocket.accept();
-                    new Thread(new ClientHandleTask(cm, client));
+                    new Thread(new ClientHandleTask(cm, client)).start();
                 } catch (IOException e) {
                     Log.exception(e);
                 }

@@ -59,9 +59,9 @@ public class ClientManager {
         }
     }
 
-    public void removeClient(Client client) {
+    public void removeClient(int clientId) {
         synchronized (clients) {
-            clients.add(client);
+            clients.remove(new Client(clientId, null));
         }
     }
 

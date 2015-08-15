@@ -12,11 +12,11 @@ import me.shreyasr.arrow.util.CartesianPosition;
 public abstract class BaseEntity {
 
     protected EntitySprite sprite;
-    protected int dir;
+    public int dir;
     public CartesianPosition pos;
     protected final double speed = 5;
     String name;
-    int health;
+    public int health;
     ShapeRenderer healthbar;
     BitmapFont dispname;
 
@@ -50,8 +50,8 @@ public abstract class BaseEntity {
         healthbar.setColor(Color.RED);
         healthbar.line(pos.x - sprite.getWidth() / 2 + health / 100f * sprite.getWidth(),
                 pos.y + sprite.getHeight() / 2 + 3,
-                pos.x+sprite.getWidth()/2,
-                pos.y + sprite.getHeight()/2+3);
+                pos.x + sprite.getWidth() / 2,
+                pos.y + sprite.getHeight() / 2 + 3);
         healthbar.end();
     }
 }

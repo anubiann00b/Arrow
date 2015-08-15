@@ -6,11 +6,12 @@ import java.util.List;
 
 public class ProjectilePacketHandler implements PacketHandler {
 
-    public static int type=1;
+    public static int TYPE = 1;
 
     public static byte[] encodePacket(int playerId, int projectileId, int startX, int startY,
                                       long startTime, double direction, int velocity) {
-        return ByteBuffer.wrap(new byte[36])
+        return ByteBuffer.wrap(new byte[40])
+                .putInt(TYPE)
                 .putInt(playerId)
                 .putInt(projectileId)
                 .putInt(startX)
@@ -23,16 +24,16 @@ public class ProjectilePacketHandler implements PacketHandler {
 
     @Override
     public void handlePacket(ByteBuffer data) {
+        int playerId = data.getInt();
+        int projectileId = data.getInt();
+        int startX = data.getInt();
+        int startY = data.getInt();
+        long startTime = data.getLong();
+        double direction = data.getDouble();
+        int velocity = data.getInt();
+
         for (Listener l : listeners) {
-            l.onReceive(
-                    data.getInt(),
-                    data.getInt(),
-                    data.getInt(),
-                    data.getInt(),
-                    data.getLong(),
-                    data.getDouble(),
-                    data.getInt()
-            );
+            l.onReceive(playerId, projectileId, startX, startY, startTime, direction, velocity);
         }
     }
 

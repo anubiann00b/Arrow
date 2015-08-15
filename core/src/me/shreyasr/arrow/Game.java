@@ -5,18 +5,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import me.shreyasr.arrow.entity.BaseEntity;
+import me.shreyasr.arrow.entity.EnemyPlayer;
 import me.shreyasr.arrow.entity.Player;
 import me.shreyasr.arrow.graphics.Image;
 import me.shreyasr.arrow.input.PlayerInputMethod;
+import me.shreyasr.arrow.network.NetworkHandler;
 import me.shreyasr.arrow.projectiles.Projectile;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
@@ -32,9 +35,13 @@ public class Game extends ApplicationAdapter {
     public static Player player;
     Image tileImage;
     ShapeRenderer healthbar;
+    NetworkHandler networkHandler;
+    final String ip;
+    Queue<Runnable> runnableQueue = new LinkedBlockingQueue<Runnable>();
 
-    public Game(PlayerInputMethod inputMethod) {
+    public Game(PlayerInputMethod inputMethod, String ip) {
         this.inputMethod = inputMethod;
+        this.ip = ip;
     }
 
     @Override
@@ -53,6 +60,8 @@ public class Game extends ApplicationAdapter {
         inputMultiplexer.addProcessor(inputMethod);
 
         camera = new OrthographicCamera(Constants.SCREEN.x*768f/Constants.SCREEN.y, 768);
+
+        setUpNetworkHandler();
     }
 
     @Override
@@ -70,6 +79,9 @@ public class Game extends ApplicationAdapter {
             boolean keep = p.update();
             if (!keep) iterator.remove();
         }
+
+        networkHandler.update(player); //QUEUE SHIT
+        while(runnableQueue.peek() != null) runnableQueue.remove().run();
 
         updateCamera();
 
@@ -124,5 +136,45 @@ public class Game extends ApplicationAdapter {
 
     public static CartesianPosition getCameraPos() {
         return new CartesianPosition(camera.position.x, camera.position.y);
+    }
+
+    List<Integer> protectedIds = new ArrayList<Integer>();
+
+    private void setUpNetworkHandler() {
+        networkHandler = new NetworkHandler(ip,
+                new PlayerPacketHandler.Listener() {
+                    @Override
+                    public void onReceive(final int playerId, int health,
+                                          final int x, final int y, int dir) {
+                        if (playerId == networkHandler.clientId || networkHandler.clientId == -1) return;
+                        if (protectedIds.contains(playerId)) return;
+
+                        System.out.println(playerId + " " + networkHandler.clientId);
+
+                        boolean found = false;
+                        synchronized (entities) {
+                            for (BaseEntity entity : entities) {
+                                if (entity instanceof EnemyPlayer && ((EnemyPlayer) entity).id == playerId) {
+                                    entity.health = health;
+                                    entity.pos = new CartesianPosition(x, y);
+                                    entity.dir = dir;
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                protectedIds.add(playerId);
+                                runnableQueue.offer(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        entities.add(new EnemyPlayer("ayyyy", playerId));
+                                        protectedIds.remove((Integer)playerId);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+        new Thread(networkHandler).start();
     }
 }

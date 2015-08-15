@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class ClientHandleTask implements Runnable {
 
@@ -28,16 +27,19 @@ public class ClientHandleTask implements Runnable {
             Log.exception(e);
             return;
         }
+        Log.m("Accepted client! " +  clientId + " @ "
+                + clientSocket.getRemoteSocketAddress());
         cm.addClient(new Client(clientId, clientSocket));
 
-        byte[] arr = new byte[PacketRouter.MAX_PACKET_SIZE];
         while (true) {
-            Arrays.fill(arr, (byte) 0);
+            byte[] arr = new byte[PacketRouter.MAX_PACKET_SIZE];
             try {
                 in.read(arr);
             } catch (IOException e) {
                 Log.exception(e);
-                continue;
+                cm.removeClient(clientId);
+                Log.m("Removed client: " + clientId);
+                break;
             }
             cm.handlePacket(arr);
         }

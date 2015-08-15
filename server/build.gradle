@@ -1,4 +1,13 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = "me.shreyasr.arrow.Server"
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.shreyasr.arrow.Server'
+    }
+}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')

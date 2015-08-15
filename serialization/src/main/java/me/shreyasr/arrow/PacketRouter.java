@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public class PacketRouter {
 
-    public static final int MAX_PACKET_SIZE = 36;
+    public static final int MAX_PACKET_SIZE = 40;
 
     public final PlayerPacketHandler playerPacketHandler;
     public final ProjectilePacketHandler projectilePacketHandler;
@@ -20,11 +20,11 @@ public class PacketRouter {
         ByteBuffer bufferdata = ByteBuffer.wrap(data);
         int type = bufferdata.getInt();
 
-        if (type == PlayerPacketHandler.type){
+        if (type == PlayerPacketHandler.TYPE){
             playerPacketHandler.handlePacket(bufferdata);
-        } else if (type == ProjectilePacketHandler.type){
+        } else if (type == ProjectilePacketHandler.TYPE){
             projectilePacketHandler.handlePacket(bufferdata);
-        } else if (type == CollisionPacketHandler.type){
+        } else if (type == CollisionPacketHandler.TYPE){
             collisionPacketHandler.handlePacket(bufferdata);
         }
     }
