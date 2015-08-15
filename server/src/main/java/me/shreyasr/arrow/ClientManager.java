@@ -93,10 +93,16 @@ public class ClientManager {
                     //calculate damage taken and update model
                     int damageTaken = 0;
                     for (ProjectileModel projectile : projectiles.values()) {
-                        damageTaken += (PlayerProjectileCollisionDetector.hasCollided(player,
-                                projectile) ? 1 : 0)*DAMAGE;
+                        if (PlayerProjectileCollisionDetector.hasCollided(player,
+                                projectile)) {
+                            damageTaken += DAMAGE;
+                            projectiles.remove(projectile.projectileID);
+                        }
+                        //but client is still rendering projectile
                     }
                     player.health -= damageTaken;
+
+                    //prepare to write back to client
                     packetQueue.add(PlayerPacketHandler.encodePacket(playerId, player.health, x, y, direction));
                 }
             }

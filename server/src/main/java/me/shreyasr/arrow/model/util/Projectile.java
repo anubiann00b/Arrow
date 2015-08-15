@@ -10,6 +10,7 @@ public class Projectile {
     public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition) {
         velocity = pPolarVelocity;
         startPos = pPosition;
+        position = pPosition;
         beginningTime = System.currentTimeMillis();
     }
 
