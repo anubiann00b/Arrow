@@ -9,7 +9,7 @@ public class PlayerPacketHandler implements PacketHandler {
     public static int TYPE = 0;
 
     public static byte[] encodePacket(int playerId, int health, int x, int y, int direction){
-        return ByteBuffer.wrap(new byte[24])
+        return ByteBuffer.wrap(new byte[PacketRouter.MAX_PACKET_SIZE])
                 .putInt(TYPE)
                 .putInt(playerId)
                 .putInt(health)
@@ -26,6 +26,10 @@ public class PlayerPacketHandler implements PacketHandler {
         int x = data.getInt();
         int y = data.getInt();
         int dir = data.getInt();
+//        System.out.println("id:" + playerId
+//                + " | hp:" + health
+//                + " | (" + x + "," + y + ")"
+//                + " | dir:" + dir);
         for (Listener l : listeners) {
             l.onReceive(playerId, health, x, y, dir);
         }

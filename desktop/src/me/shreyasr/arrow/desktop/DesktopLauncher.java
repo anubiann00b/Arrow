@@ -7,11 +7,11 @@ import me.shreyasr.arrow.input.KeyboardPlayerInputMethod;
 
 public class DesktopLauncher {
 
-    public static void main(String[] arg) {
+    public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 800;
         config.height = 600;
-        new LwjglApplication(new Game(new KeyboardPlayerInputMethod(), "54.67.114.47"), config);
-//        new LwjglApplication(new Game(new KeyboardPlayerInputMethod(), "127.0.0.1"), config);
+        String ip = args.length == 0 ? "54.67.114.47" : "127.0.0.1";
+        new LwjglApplication(new Game(new KeyboardPlayerInputMethod(), ip), config);
     }
 }

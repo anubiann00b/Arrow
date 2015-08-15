@@ -10,7 +10,7 @@ public class ProjectilePacketHandler implements PacketHandler {
 
     public static byte[] encodePacket(int playerId, int projectileId, int startX, int startY,
                                       long startTime, double direction, int velocity) {
-        return ByteBuffer.wrap(new byte[40])
+        return ByteBuffer.wrap(new byte[PacketRouter.MAX_PACKET_SIZE])
                 .putInt(TYPE)
                 .putInt(playerId)
                 .putInt(projectileId)
@@ -31,6 +31,8 @@ public class ProjectilePacketHandler implements PacketHandler {
         long startTime = data.getLong();
         double direction = data.getDouble();
         int velocity = data.getInt();
+
+//        System.out.println("Projectile");
 
         for (Listener l : listeners) {
             l.onReceive(playerId, projectileId, startX, startY, startTime, direction, velocity);

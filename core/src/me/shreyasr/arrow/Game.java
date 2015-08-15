@@ -163,8 +163,6 @@ public class Game extends ApplicationAdapter {
                         if (playerId == networkHandler.clientId || networkHandler.clientId == -1) return;
                         if (protectedIds.contains(playerId)) return;
 
-                        System.out.println(playerId + " " + networkHandler.clientId);
-
                         boolean found = false;
                         synchronized (entities) {
                             for (BaseEntity entity : entities) {
