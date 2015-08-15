@@ -23,6 +23,7 @@ public class Projectile {
                       String imgFileLocation) {
         velocity = pPolarVelocity;
         startPos = pPosition;
+        position = pPosition;
         beginningTime = System.currentTimeMillis();
         image = new Image(imgFileLocation);
     }

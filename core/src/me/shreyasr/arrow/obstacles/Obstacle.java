@@ -15,18 +15,12 @@ public class Obstacle {
         position = oPosition;
     }
 
-    public Obstacle(String imgFileLocation, int left, int bot, int width, int height, CartesianPosition
-                    oPosition) {
-        //here would make the image from the dimensions given.
-        position = oPosition;
-    }
-
     private CartesianPosition getPosition() {
         return position;
     }
 
     public boolean update() {
-        return false;
+        return true;
     }
 
     public void render(SpriteBatch batch) {
