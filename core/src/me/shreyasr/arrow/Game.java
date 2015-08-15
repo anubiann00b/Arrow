@@ -2,6 +2,7 @@ package me.shreyasr.arrow;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -10,17 +11,30 @@ import java.util.List;
 
 import me.shreyasr.arrow.entity.BaseEntity;
 import me.shreyasr.arrow.entity.Player;
+import me.shreyasr.arrow.input.PlayerInputMethod;
 
 public class Game extends ApplicationAdapter {
 
     SpriteBatch batch;
     List<BaseEntity> entities;
+    private PlayerInputMethod inputMethod;
+    InputMultiplexer inputMultiplexer;
+    Player player;
+
+    public Game(PlayerInputMethod inputMethod) {
+        this.inputMethod = inputMethod;
+    }
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         entities = new ArrayList<BaseEntity>();
-        entities.add(new Player());
+        player = new Player(inputMethod);
+        entities.add(player);
+
+        inputMultiplexer = new InputMultiplexer();
+        Gdx.input.setInputProcessor(inputMultiplexer);
+        inputMultiplexer.addProcessor(inputMethod);
     }
 
     @Override

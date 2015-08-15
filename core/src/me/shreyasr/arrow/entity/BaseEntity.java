@@ -7,8 +7,10 @@ import me.shreyasr.arrow.util.Position;
 
 public abstract class BaseEntity {
 
-    private EntitySprite sprite;
+    protected EntitySprite sprite;
+    protected int dir;
     public Position pos;
+    protected final double speed = 5;
 
     public BaseEntity(String filePrefix) {
         sprite = new EntitySprite(filePrefix, 166, 64);
@@ -18,6 +20,7 @@ public abstract class BaseEntity {
     public abstract boolean update(double delta);
 
     public void render(SpriteBatch batch, double delta) {
+        sprite.setDirection(dir);
         sprite.render(batch, (int)(delta*1000/60), pos);
     }
 }
