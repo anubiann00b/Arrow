@@ -9,14 +9,27 @@ public class Obstacle {
 
     private Image image;
     private CartesianPosition position;
+    private final int width;
+    private final int height;
 
-    public Obstacle(String imgFileLocation, CartesianPosition oPosition) {
+    public Obstacle(String imgFileLocation, CartesianPosition oPosition, int width,
+                    int height) {
         image = new Image(imgFileLocation);
         position = oPosition;
+        this.width = width;
+        this.height = height;
     }
 
-    private CartesianPosition getPosition() {
+    public CartesianPosition getPosition() {
         return position;
+    }
+
+    public int getWidth(){
+        return  width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public boolean update() {
