@@ -1,4 +1,4 @@
-package me.shreyasr;
+package me.shreyasr.arrow;
 
 import java.nio.ByteBuffer;
 
