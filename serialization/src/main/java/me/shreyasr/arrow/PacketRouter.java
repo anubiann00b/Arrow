@@ -1,5 +1,7 @@
 package me.shreyasr.arrow;
 
+import me.shreyasr.CollisionPacketHandler;
+
 public class PacketRouter {
 
     public static final int MAX_PACKET_SIZE = 36;
