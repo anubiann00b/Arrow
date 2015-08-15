@@ -1,1 +1,2 @@
+include ':serialization'
 include 'desktop', 'android', 'core'
