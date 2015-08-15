@@ -15,23 +15,32 @@ public class Projectile {
 //    private final float height;
     private CartesianPosition position;
     private PolarVelocity velocity;
-    private final long startingTime;
+    private  long beginningTime;
     private Image image;
 
     public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition,
                       String imgFileLocation) {
         velocity = pPolarVelocity;
         position = pPosition;
-        startingTime = System.currentTimeMillis();
+        beginningTime = System.currentTimeMillis();
         image = new Image(imgFileLocation);
+    }
+
+    public CartesianPosition getPosition() {
+        return position;
+    }
+
+    public PolarVelocity getVelocity() {
+        return velocity;
     }
 
     public boolean update () {
         long currentTime = System.currentTimeMillis();
-        long timePassed = currentTime - startingTime;
+        long timePassed = currentTime - beginningTime;
+        beginningTime = currentTime;
         if (timePassed <= 0) return false;
-        float newX = position.x + (float) (velocity.magnitude*Math.cos(velocity.direction)/timePassed);
-        float newY = position.y + (float) (velocity.magnitude*Math.sin(velocity.direction)/timePassed);
+        float newX = position.x + (float) (velocity.speed*Math.cos(velocity.direction)/timePassed);
+        float newY = position.y + (float) (velocity.speed*Math.sin(velocity.direction)/timePassed);
         position = new CartesianPosition(newX, newY);
         return true;
     }
