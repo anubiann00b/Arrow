@@ -1,11 +1,14 @@
 package me.shreyasr.arrow;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.shreyasr.arrow.model.PlayerModel;
@@ -16,6 +19,7 @@ public class ClientManager {
     private final List<Client> clients = new ArrayList<Client>();
     private final Map<Integer, PlayerModel> players = new HashMap<Integer, PlayerModel>();
     private final Map<Integer, ProjectileModel> projectiles = new HashMap<Integer, ProjectileModel>();
+    private final Queue<byte[]> packetQueue = new LinkedBlockingQueue<byte[]>();
     public final AtomicInteger clientCounter = new AtomicInteger();
 
     PacketRouter packetRouter = new PacketRouter();
@@ -35,9 +39,18 @@ public class ClientManager {
     }
 
     private void updateClients() {
-//        for (Client client : clients) {
-//            client.socket.getOutputStream().
-//        }
+        synchronized (packetQueue) {
+            for (Client client : clients) {
+                for (byte[] packet : packetQueue) {
+                    try {
+                        client.socket.getOutputStream().write(packet);
+                    } catch (IOException e) {
+                        Log.exception(e);
+                    }
+                }
+            }
+            packetQueue.clear();
+        }
     }
 
     public void addClient(Client client) {
@@ -69,6 +82,8 @@ public class ClientManager {
                     player.x = x;
                     player.y = y;
                     player.direction = direction;
+
+                    packetQueue.add(PlayerPacketHandler.encodePacket(playerId, health, x, y, direction));
                 }
             }
         });
