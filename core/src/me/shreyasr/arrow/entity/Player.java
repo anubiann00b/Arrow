@@ -8,7 +8,7 @@ public class Player extends BaseEntity {
     private PlayerInputMethod inputMethod;
 
     public Player(PlayerInputMethod inputMethod) {
-        super("player");
+        super("player", "playername101");
         this.inputMethod = inputMethod;
     }
 

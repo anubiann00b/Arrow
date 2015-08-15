@@ -31,6 +31,14 @@ public class EntitySprite {
         this.loadAnim(filePrefix + "_down.png", 3);
     }
 
+    public float getWidth(){
+        return scale.x;
+    }
+
+    public float getHeight(){
+        return scale.y;
+    }
+
     public void render(SpriteBatch batch, int delta, CartesianPosition p) {
         count += delta;
         currentFrame = animations[directionFacing].getKeyFrameIndex(count);

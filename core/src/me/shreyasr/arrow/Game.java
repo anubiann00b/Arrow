@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class Game extends ApplicationAdapter {
     InputMultiplexer inputMultiplexer;
     OrthographicCamera camera;
     Player player;
+    ShapeRenderer healthbar;
 
     public Game(PlayerInputMethod inputMethod) {
         this.inputMethod = inputMethod;
@@ -33,6 +36,7 @@ public class Game extends ApplicationAdapter {
         player = new Player(inputMethod);
         entities = new ArrayList<BaseEntity>();
         player = new Player(inputMethod);
+        healthbar = new ShapeRenderer();
         entities.add(player);
 
         inputMultiplexer = new InputMultiplexer();
@@ -68,5 +72,10 @@ public class Game extends ApplicationAdapter {
         }
 
         batch.end();
+
+        healthbar.setProjectionMatrix(camera.combined);
+        for (BaseEntity entity : entities) {
+            entity.renderstatus(healthbar);
+        }
     }
 }
