@@ -13,6 +13,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import me.shreyasr.arrow.model.PlayerModel;
 import me.shreyasr.arrow.model.ProjectileModel;
+import me.shreyasr.arrow.model.util.CartesianPosition;
+import me.shreyasr.arrow.model.util.PolarVelocity;
+import me.shreyasr.arrow.model.util.Projectile;
 
 public class ClientManager {
 
@@ -21,6 +24,7 @@ public class ClientManager {
     private final Map<Integer, ProjectileModel> projectiles = new HashMap<Integer, ProjectileModel>();
     private final Queue<byte[]> packetQueue = new LinkedBlockingQueue<byte[]>();
     public final AtomicInteger clientCounter = new AtomicInteger();
+    private static final int DAMAGE = 5;
 
     PacketRouter packetRouter = new PacketRouter();
 
@@ -78,26 +82,28 @@ public class ClientManager {
                         players.put(playerId, player);
                     }
 
-                    player.health = health;
                     player.x = x;
                     player.y = y;
                     player.direction = direction;
 
-                    packetQueue.add(PlayerPacketHandler.encodePacket(playerId, health, x, y, direction));
+                    //calculate damage taken and update model
+                    int damageTaken = 0;
+                    for (ProjectileModel projectile : projectiles.values()) {
+                        damageTaken += (PlayerProjectileCollisionDetector.hasCollided(player,
+                                projectile) ? 1 : 0)*DAMAGE;
+                    }
+                    player.health -= damageTaken;
+                    packetQueue.add(PlayerPacketHandler.encodePacket(playerId, player.health, x, y, direction));
                 }
             }
         });
         packetRouter.projectilePacketHandler.addListener(new ProjectilePacketHandler.Listener() {
             @Override
             public void onReceive(int playerId, int projectileId, int startX, int startY,
-                                  long startTime, double direction, int velocity) {
-
-            }
-        });
-        packetRouter.collisionPacketHandler.addListener(new CollisionPacketHandler.Listener() {
-            @Override
-            public void onReceive(int projectileId, int playerId, int hitPlayerId) {
-
+                                  long startTime, double direction, int speed) {
+                Projectile projectile = new Projectile(new PolarVelocity(direction, speed), new CartesianPosition(startX, startY));
+                ProjectileModel projectileModel = new ProjectileModel(projectileId, playerId, projectile);
+                projectiles.put(projectileId, projectileModel);
             }
         });
     }

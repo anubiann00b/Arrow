@@ -1,4 +1,4 @@
-package me.shreyasr.arrow.util;
+package me.shreyasr.arrow.model.util;
 
 public class PolarVelocity {
 

@@ -1,30 +1,16 @@
-package me.shreyasr.arrow.projectiles;
-
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import me.shreyasr.arrow.graphics.Image;
-import me.shreyasr.arrow.util.CartesianPosition;
-import me.shreyasr.arrow.util.PolarVelocity;
+package me.shreyasr.arrow.model.util;
 
 public class Projectile {
 
-    //for now we can start with one type of projectile, if we get around
-    //to other types we can change this into an interface or abstract class
-
-//    private final float width;
-//    private final float height;
     private CartesianPosition position;
     private CartesianPosition startPos;
     private PolarVelocity velocity;
-    private  long beginningTime;
-    private Image image;
+    private long beginningTime;
 
-    public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition,
-                      String imgFileLocation) {
+    public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition) {
         velocity = pPolarVelocity;
         startPos = pPosition;
         beginningTime = System.currentTimeMillis();
-        image = new Image(imgFileLocation);
     }
 
     public CartesianPosition getPosition() {
@@ -43,9 +29,5 @@ public class Projectile {
         float newY = startPos.y + (float) (velocity.getSpeed()*Math.sin(velocity.getDirection())*timePassed/100f);
         position = new CartesianPosition(newX, newY);
         return position.isInWorld(196);
-    }
-
-    public void render(SpriteBatch batch) {
-        image.render(batch, position, 4.0f, (float) velocity.getDirection());
     }
 }
