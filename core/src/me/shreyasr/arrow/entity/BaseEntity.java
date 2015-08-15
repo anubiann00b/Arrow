@@ -15,7 +15,7 @@ public abstract class BaseEntity {
     protected int dir;
     public CartesianPosition pos;
     protected final double speed = 5;
-    String name;
+    public String name;
     int health;
     ShapeRenderer healthbar;
     BitmapFont dispname;
@@ -36,7 +36,7 @@ public abstract class BaseEntity {
         /* If you want the name at the top */
         //dispname.draw(batch, name, pos.x-sprite.getWidth()/2, pos.y + sprite.getHeight() / 2+20);
         /* If you want the name at the bottom */
-        dispname.draw(batch, name, pos.x-sprite.getWidth()/2, pos.y - sprite.getHeight() / 2 - 2);
+        dispname.draw(batch, name, pos.x-dispname.getSpaceWidth()*name.length()*2 , pos.y - sprite.getHeight() / 2 - 2);
     }
 
     public void renderstatus(ShapeRenderer healthbar){

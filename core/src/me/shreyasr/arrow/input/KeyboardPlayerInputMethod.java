@@ -37,6 +37,9 @@ public class KeyboardPlayerInputMethod extends PlayerInputMethod {
             case Input.Keys.S:
                 pos = pos.add(0,-1);
                 break;
+            case Input.Keys.ENTER:
+                Game.change_name();
+                break;
         }
         return false;
     }
