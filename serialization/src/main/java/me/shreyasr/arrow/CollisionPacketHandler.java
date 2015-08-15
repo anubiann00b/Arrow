@@ -4,19 +4,25 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.shreyasr.arrow.PacketHandler;
-
 public class CollisionPacketHandler implements PacketHandler {
-    /* order: projectileId, playerId, hitPlayerId */
+    public static int type = 3;
 
     public static byte[] encodePacket(int projectileId, int playerId, int hitPlayerId) {
-        return ByteBuffer.wrap(new byte[12]).putInt(projectileId).putInt(playerId).putInt(hitPlayerId).array();
+        return ByteBuffer.wrap(new byte[12])
+                .putInt(projectileId)
+                .putInt(playerId)
+                .putInt(hitPlayerId)
+                .array();
     }
 
     @Override
     public void handlePacket(ByteBuffer data) {
         for (Listener l : listeners) {
-            l.onReceive(data.getInt(), data.getInt(), data.getInt());
+            l.onReceive(
+                    data.getInt(),
+                    data.getInt(),
+                    data.getInt()
+            );
         }
     }
 
