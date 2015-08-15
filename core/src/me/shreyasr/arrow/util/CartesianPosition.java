@@ -2,8 +2,8 @@ package me.shreyasr.arrow.util;
 
 public class CartesianPosition {
 
-    public float x;
-    public float y;
+    public final float x;
+    public final float y;
 
     public CartesianPosition() {
         this(0,0);

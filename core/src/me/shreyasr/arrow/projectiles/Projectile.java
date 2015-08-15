@@ -11,17 +11,15 @@ public class Projectile {
     //for now we can start with one type of projectile, if we get around
     //to other types we can change this into an interface or abstract class
 
-    private final float width;
-    private final float height;
+//    private final float width;
+//    private final float height;
     private CartesianPosition position;
     private PolarVelocity velocity;
     private final long startingTime;
     private Image image;
 
-    public Projectile(float pWidth, float pHeight, PolarVelocity pPolarVelocity,
-                      CartesianPosition pPosition, String imgFileLocation) {
-        width = pWidth;
-        height = pHeight;
+    public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition,
+                      String imgFileLocation) {
         velocity = pPolarVelocity;
         position = pPosition;
         startingTime = System.currentTimeMillis();
@@ -31,8 +29,10 @@ public class Projectile {
     public boolean update () {
         long currentTime = System.currentTimeMillis();
         long timePassed = currentTime - startingTime;
-        position.x += velocity.magnitude*Math.cos(velocity.direction)/timePassed;
-        position.y += velocity.magnitude*Math.sin(velocity.direction)/timePassed;
+        if (timePassed <= 0) return false;
+        float newX = position.x + (float) (velocity.magnitude*Math.cos(velocity.direction)/timePassed);
+        float newY = position.y + (float) (velocity.magnitude*Math.sin(velocity.direction)/timePassed);
+        position = new CartesianPosition(newX, newY);
         return true;
     }
 
