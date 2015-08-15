@@ -4,13 +4,16 @@ import me.shreyasr.arrow.entity.attack.AttackBow;
 import me.shreyasr.arrow.input.PlayerInputMethod;
 import me.shreyasr.arrow.util.CartesianPosition;
 
+import static com.badlogic.gdx.math.MathUtils.random;
+
+
 public class Player extends BaseEntity {
 
     private PlayerInputMethod inputMethod;
     AttackBow attackBow;
 
     public Player(PlayerInputMethod inputMethod) {
-        super("player");
+        super("player", "player"+Integer.toString(random(10000)));
         this.inputMethod = inputMethod;
         attackBow = new AttackBow.Builder()
                 .setFireTime(100)

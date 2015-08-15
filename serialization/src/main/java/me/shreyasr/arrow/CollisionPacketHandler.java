@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.shreyasr.arrow.PacketHandler;
+
 public class CollisionPacketHandler implements PacketHandler {
     /* order: projectileId, playerId, hitPlayerId */
 
