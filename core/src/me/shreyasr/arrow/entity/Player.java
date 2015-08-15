@@ -15,6 +15,8 @@ public class Player extends BaseEntity {
     @Override
     public boolean update(double delta) {
         updatePosition(inputMethod.getMovement(), delta);
+
+        CartesianPosition attack = inputMethod.getAttack();
         return false;
     }
 
