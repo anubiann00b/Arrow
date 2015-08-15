@@ -2,6 +2,7 @@ package me.shreyasr.arrow;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -120,6 +121,19 @@ public class Game extends ApplicationAdapter {
                 tileImage.renderNoCenter(batch, new CartesianPosition(i * 64, j * 64), 4);
             }
         }
+    }
+
+    public static void change_name(){
+        Gdx.input.getTextInput(new Input.TextInputListener() {
+            @Override
+            public void input (String text) {
+                player.name =  text;
+            }
+            @Override
+            public void canceled () {
+
+            }
+        }, "New player name?", player.name, "");
     }
 
     public static CartesianPosition getCameraPos() {
