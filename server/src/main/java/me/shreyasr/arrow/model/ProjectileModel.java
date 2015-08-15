@@ -6,18 +6,16 @@ public class ProjectileModel {
 
     private final int projectileID;
     private Projectile projectile;
-    private final PlayerModel shooter;
-    private final int damage;
+    public final int playerID;
     private static final int LENGTH = 16*4;
     private static final int CENTER_X = 7*4;
     private static final int CENTER_Y = 7*4;
 
-    public ProjectileModel(int projectileID, PlayerModel shooter, int damage,
+    public ProjectileModel(int projectileID, int playerID,
                            Projectile projectile) {
         this.projectile = projectile;
         this.projectileID = projectileID;
-        this.shooter = shooter;
-        this.damage = damage;
+        this.playerID = playerID;
     }
 
     public int getLength() {
@@ -30,6 +28,10 @@ public class ProjectileModel {
 
     public int getCenterY() {
         return CENTER_Y;
+    }
+
+    public void updateProjectile() {
+        projectile.update();
     }
 
     public double getDirection() {
@@ -46,14 +48,6 @@ public class ProjectileModel {
 
     public float getY() {
         return projectile.getPosition().y;
-    }
-
-    public boolean update() {
-        return true;
-    }
-
-    public int getDamage() {
-        return damage;
     }
 
 }

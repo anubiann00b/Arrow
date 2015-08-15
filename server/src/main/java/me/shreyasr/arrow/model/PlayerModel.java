@@ -3,6 +3,7 @@ package me.shreyasr.arrow.model;
 public class PlayerModel {
 
     public final int playerId;
+    private int score;
     public int health;
     public int x;
     public int y;
@@ -24,5 +25,13 @@ public class PlayerModel {
 
     public boolean update() {
         return true;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void updateScore(int delta) {
+        this.score += delta;
     }
 }
