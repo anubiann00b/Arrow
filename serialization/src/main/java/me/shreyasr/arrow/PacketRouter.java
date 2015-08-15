@@ -1,4 +1,4 @@
-package me.shreyasr;
+package me.shreyasr.arrow;
 
 public class PacketRouter {
 
