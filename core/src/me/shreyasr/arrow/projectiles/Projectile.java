@@ -14,6 +14,7 @@ public class Projectile {
 //    private final float width;
 //    private final float height;
     private CartesianPosition position;
+    private CartesianPosition startPos;
     private PolarVelocity velocity;
     private  long beginningTime;
     private Image image;
@@ -21,7 +22,7 @@ public class Projectile {
     public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition,
                       String imgFileLocation) {
         velocity = pPolarVelocity;
-        position = pPosition;
+        startPos = pPosition;
         beginningTime = System.currentTimeMillis();
         image = new Image(imgFileLocation);
     }
@@ -34,15 +35,14 @@ public class Projectile {
         return velocity;
     }
 
-    public boolean update () {
+    /** True to keep, false to leave. */
+    public boolean update() {
         long currentTime = System.currentTimeMillis();
         long timePassed = currentTime - beginningTime;
-        beginningTime = currentTime;
-        if (timePassed <= 0) return false;
-        float newX = position.x + (float) (velocity.speed*Math.cos(velocity.direction)/timePassed);
-        float newY = position.y + (float) (velocity.speed*Math.sin(velocity.direction)/timePassed);
+        float newX = startPos.x + (float) (velocity.speed*Math.cos(velocity.direction)*timePassed/100f);
+        float newY = startPos.y + (float) (velocity.speed*Math.sin(velocity.direction)*timePassed/100f);
         position = new CartesianPosition(newX, newY);
-        return true;
+        return position.isInWorld(196);
     }
 
     public void render(SpriteBatch batch) {

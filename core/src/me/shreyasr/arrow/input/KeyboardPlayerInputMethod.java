@@ -3,11 +3,14 @@ package me.shreyasr.arrow.input;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import me.shreyasr.arrow.Constants;
+import me.shreyasr.arrow.Game;
 import me.shreyasr.arrow.util.CartesianPosition;
 
 public class KeyboardPlayerInputMethod extends PlayerInputMethod {
 
     CartesianPosition pos = new CartesianPosition();
+    CartesianPosition atk = new CartesianPosition();
 
     @Override
     public CartesianPosition getMovement() {
@@ -16,7 +19,7 @@ public class KeyboardPlayerInputMethod extends PlayerInputMethod {
 
     @Override
     public CartesianPosition getAttack() {
-        return null;
+        return atk;
     }
 
     @Override
@@ -57,18 +60,29 @@ public class KeyboardPlayerInputMethod extends PlayerInputMethod {
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    public boolean touchDown(int x, int y, int pointer, int button) {
+        atk = player.pos
+                .subtract(x, y)
+                .subtract(
+                        Game.getCameraPos()
+                                .subtract(
+                                        Constants.SCREEN
+                                                .scale(1/2f)
+                                )
+                )
+                .invertX();
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        atk = new CartesianPosition();
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        return touchDown(screenX, screenY, pointer, -1);
     }
 
     @Override

@@ -1,22 +1,27 @@
 package me.shreyasr.arrow.entity;
 
+import me.shreyasr.arrow.entity.attack.AttackBow;
 import me.shreyasr.arrow.input.PlayerInputMethod;
 import me.shreyasr.arrow.util.CartesianPosition;
 
 public class Player extends BaseEntity {
 
     private PlayerInputMethod inputMethod;
+    AttackBow attackBow;
 
     public Player(PlayerInputMethod inputMethod) {
         super("player");
         this.inputMethod = inputMethod;
+        attackBow = new AttackBow.Builder()
+                .setFireTime(100)
+                .setSpeed(8)
+                .create();
     }
 
     @Override
     public boolean update(double delta) {
         updatePosition(inputMethod.getMovement(), delta);
-
-        CartesianPosition attack = inputMethod.getAttack();
+        handleAttack(inputMethod.getAttack(), delta);
         return false;
     }
 
@@ -38,5 +43,10 @@ public class Player extends BaseEntity {
             else
                 dir = 3;
         }
+    }
+
+    private void handleAttack(CartesianPosition atkDir, double delta) {
+        if (atkDir.isEmpty()) return;
+        attackBow.update(delta, atkDir);
     }
 }

@@ -1,5 +1,7 @@
 package me.shreyasr.arrow.util;
 
+import me.shreyasr.arrow.Constants;
+
 public class CartesianPosition {
 
     public final float x;
@@ -26,8 +28,32 @@ public class CartesianPosition {
         return new CartesianPosition(x+p.x,y+p.y);
     }
 
+    public CartesianPosition subtract(int x, int y) {
+        return add(-x, -y);
+    }
+
+    public CartesianPosition subtract(CartesianPosition p) {
+        return new CartesianPosition(x-p.x, y-p.y);
+    }
+
     @Override
     public String toString() {
         return "(" + x + "," + y + ")";
+    }
+
+    public CartesianPosition invertX() {
+        return new CartesianPosition(-x, y);
+    }
+
+    public boolean isEmpty() {
+        return x==0 && y==0;
+    }
+
+    public double getDir() {
+        return Math.atan2(y, x);
+    }
+
+    public boolean isInWorld(int padding) {
+        return x>-padding && y>-padding && x< Constants.WORLD.x+padding && y<Constants.WORLD.y+padding;
     }
 }

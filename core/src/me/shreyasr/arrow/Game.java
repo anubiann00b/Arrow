@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import me.shreyasr.arrow.entity.BaseEntity;
 import me.shreyasr.arrow.entity.Player;
 import me.shreyasr.arrow.graphics.Image;
 import me.shreyasr.arrow.input.PlayerInputMethod;
+import me.shreyasr.arrow.projectiles.Projectile;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
 
@@ -21,10 +23,11 @@ public class Game extends ApplicationAdapter {
 
     SpriteBatch batch;
     List<BaseEntity> entities;
+    public static List<Projectile> projectiles = new ArrayList<Projectile>();
     PlayerInputMethod inputMethod;
     InputMultiplexer inputMultiplexer;
-    OrthographicCamera camera;
-    Player player;
+    public static OrthographicCamera camera;
+    public static Player player;
     Image tileImage;
 
     public Game(PlayerInputMethod inputMethod) {
@@ -38,6 +41,7 @@ public class Game extends ApplicationAdapter {
         entities = new ArrayList<BaseEntity>();
         player = new Player(inputMethod);
         entities.add(player);
+        inputMethod.setPlayer(player);
         tileImage = new Image("grass");
 
         inputMultiplexer = new InputMultiplexer();
@@ -57,6 +61,12 @@ public class Game extends ApplicationAdapter {
             entity.update(delta);
         }
 
+        for (Iterator<Projectile> iterator = projectiles.iterator(); iterator.hasNext(); ) {
+            Projectile p = iterator.next();
+            boolean keep = p.update();
+            if (!keep) iterator.remove();
+        }
+
         updateCamera();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -68,6 +78,10 @@ public class Game extends ApplicationAdapter {
 
         for (BaseEntity entity : entities) {
             entity.render(batch, delta);
+        }
+
+        for (Projectile p : projectiles) {
+            p.render(batch);
         }
 
         batch.end();
@@ -97,5 +111,9 @@ public class Game extends ApplicationAdapter {
                 tileImage.renderNoCenter(batch, new CartesianPosition(i * 64, j * 64), 4);
             }
         }
+    }
+
+    public static CartesianPosition getCameraPos() {
+        return new CartesianPosition(camera.position.x, camera.position.y);
     }
 }
