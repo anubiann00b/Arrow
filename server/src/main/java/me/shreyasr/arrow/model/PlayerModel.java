@@ -23,6 +23,6 @@ public class PlayerModel {
     }
 
     public boolean update() {
-        return false;
+        return true;
     }
 }

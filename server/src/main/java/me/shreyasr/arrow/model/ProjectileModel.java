@@ -6,6 +6,7 @@ public class ProjectileModel {
     public int x;
     public int y;
     private float direction;
+    private float speed;
     private static final int LENGTH = 16*4;
     private static final int CENTER_X = 7*4;
     private static final int CENTER_Y = 7*4;
@@ -28,6 +29,10 @@ public class ProjectileModel {
 
     public float getDirection() {
         return direction;
+    }
+
+    public boolean update() {
+        return true;
     }
 
 }
