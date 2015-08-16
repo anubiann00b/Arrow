@@ -133,7 +133,7 @@ public class Game extends ApplicationAdapter {
         Collections.sort(entities, new Comparator<BaseEntity>() {
 
             public int compare(BaseEntity p1, BaseEntity p2) {
-                return p2.score - p1.score;
+                return p2.health - p1.health;
             }
         });
 
@@ -180,7 +180,7 @@ public class Game extends ApplicationAdapter {
         float playerRight = player.pos.x + 10*4 - 32 + 12;
         float playerTop = player.pos.y + 16*4 - 32;
         shapeRenderer.line(playerLeft, playerTop, playerRight, playerTop);
-        shapeRenderer.line(playerLeft, playerBot, playerLeft, playerTop);
+        sadasdhapeRenderer.line(playerLeft, playerBot, playerLeft, playerTop);
         shapeRenderer.line(playerRight, playerTop, playerRight, playerBot);
         shapeRenderer.line(playerLeft, playerBot, playerRight, playerBot);
         shapeRenderer.end();
