@@ -12,6 +12,7 @@ public abstract class PlayerInputMethod implements InputProcessor {
 
     public abstract CartesianPosition getMovement();
     public abstract CartesianPosition getAttack();
+    public void init() {}
     public abstract void render(SpriteBatch batch, double delta);
 
     public void setPlayer(Player player) {

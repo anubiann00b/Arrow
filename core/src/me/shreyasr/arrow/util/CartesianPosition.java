@@ -20,8 +20,16 @@ public class CartesianPosition {
         this.y = y;
     }
 
+    public CartesianPosition(double x, double y) {
+        this((float)x, (float)y);
+    }
+
     public CartesianPosition scale(float a) {
         return withinBounds(x*a, y*a);
+    }
+
+    public CartesianPosition scaleNoBounds(float a) {
+        return new CartesianPosition(x*a, y*a);
     }
 
     public CartesianPosition add(float ax, float ay) {
@@ -37,7 +45,7 @@ public class CartesianPosition {
     }
 
     public CartesianPosition subtract(CartesianPosition p) {
-        return withinBounds(x-p.x, y-p.y);
+        return withinBounds(x - p.x, y - p.y);
     }
 
     @Override
@@ -87,5 +95,22 @@ public class CartesianPosition {
             return new CartesianPosition(minX, maxY);
         }
         return new CartesianPosition(minX,minY);
+    }
+
+    public CartesianPosition limit(int dist, CartesianPosition pos) {
+        if (inRange(dist, pos))
+            return pos;
+
+        CartesianPosition offset = new CartesianPosition(x-pos.x, y-pos.y);
+        float distance = (float)Math.sqrt(offset.x*offset.x + offset.y*offset.y);
+        return this.subtract(offset.scaleNoBounds(dist / distance));
+    }
+
+    public boolean inRange(int dist, CartesianPosition pos) {
+        return getDistance(pos) < dist;
+    }
+
+    private float getDistance(CartesianPosition pos) {
+        return (float) Math.sqrt((pos.x-x)*(pos.x-x) + (pos.y-y)*(pos.y-y));
     }
 }

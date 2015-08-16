@@ -54,6 +54,8 @@ public class Game extends ApplicationAdapter {
     Queue<Runnable> runnableQueue = new LinkedBlockingQueue<Runnable>();
     static boolean dispboard = false;
     public static Queue<String> messageQueue = new LinkedBlockingQueue<String>();
+    private OrthographicCamera hudCam;
+
 
     public Game(PlayerInputMethod inputMethod, String ip) {
         this.inputMethod = inputMethod;
@@ -75,6 +77,10 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create() {
+        hudCam = new OrthographicCamera(Constants.SCREEN.x, Constants.SCREEN.y);
+        hudCam.position.set(Constants.SCREEN.x/2, Constants.SCREEN.y/2, 0);
+        hudCam.update();
+        inputMethod.init();
         batch = new SpriteBatch();
         player = new Player(inputMethod);
         entities = new ArrayList<BaseEntity>();
@@ -168,6 +174,9 @@ public class Game extends ApplicationAdapter {
         }
 
         renderQueue();
+
+        batch.setProjectionMatrix(hudCam.combined);
+        inputMethod.render(batch, delta);
         batch.end();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
