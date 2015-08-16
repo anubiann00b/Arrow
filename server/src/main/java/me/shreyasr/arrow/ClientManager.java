@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -29,6 +30,7 @@ public class ClientManager {
     private final Map<Integer, PlayerModel> players = new HashMap<Integer, PlayerModel>();
     private final Map<ProjectileID, ProjectileModel> projectiles = new HashMap<ProjectileID, ProjectileModel>();
     private final Map<Integer, ObstacleModel> obstacles = new HashMap<Integer, ObstacleModel>();
+    private LinkedHashMap<Integer, String> messageQueue = new LinkedHashMap<Integer, String>();
     private final Queue<byte[]> packetQueue = new LinkedBlockingQueue<byte[]>();
     public final AtomicInteger clientCounter = new AtomicInteger();
     private static final int DAMAGE = 5;
