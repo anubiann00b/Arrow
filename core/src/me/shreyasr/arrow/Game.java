@@ -92,7 +92,7 @@ public class Game extends ApplicationAdapter {
         font.setColor(Color.GREEN);
 
         obstacles = new ArrayList<Obstacle>();
-        obstacles.addAll(ObstacleGenerator.generate("badTree", 25, 100, 5000,
+        obstacles.addAll(ObstacleGenerator.generate("badTree", 40, 100, 5000,
                 100, 5000));
 
         powerups = new ArrayList<Obstacle>();
@@ -251,14 +251,16 @@ public class Game extends ApplicationAdapter {
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
             public void input(String text) {
+                addMessage("Changed name to " + text);
                 player.name = text;
                 inst.networkHandler.updateName(text);
+
             }
 
-            @Override public void canceled() { }
+            @Override
+            public void canceled() {
+            }
         }, "New player name?", player.name, "");
-
-        addMessage("Changed name to " + player.name);
     }
 
     public static CartesianPosition getCameraPos() {
@@ -347,6 +349,9 @@ public class Game extends ApplicationAdapter {
             }, new DeathPacketHandler.Listener() {
                 @Override
                 public void onReceive(final int killerId, final int victimId) {
+                    String victim = entities.get(victimId).name;
+                    String killer = entities.get(killerId).name;
+                    addMessage(victim + " has been slain by" + killer);
                     if (networkHandler.clientId == victimId) {
                         runnableQueue.offer(new Runnable() {
                             @Override

@@ -119,6 +119,7 @@ public class AttackBow implements Attack {
         if (timer<0 && !target.isEmpty()) {
             double startDir = target.getDir() - spread * spreadShots /2;
             if(powerup==1 && (powerupTimer <= (System.currentTimeMillis()- startTime))) {
+                Game.addMessage("Powerup expired");
                 powerup = 0;
                 damage = 5;
             }
