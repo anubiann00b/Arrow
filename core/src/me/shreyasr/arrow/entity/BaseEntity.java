@@ -25,7 +25,8 @@ public abstract class BaseEntity {
     protected final double speed = 5;
     public String name;
     public int health;
-    public int score;
+    public int kill;
+    public int death;
     BitmapFont bitmapFont;
 
     public BaseEntity(String filePrefix, String name) {
@@ -33,7 +34,8 @@ public abstract class BaseEntity {
         pos = new CartesianPosition(50, 50);
         this.name = name;
         health = 100;
-        score = 0;
+        kill = 0;
+        death = 0;
         bitmapFont = new BitmapFont();
     }
 
@@ -52,8 +54,14 @@ public abstract class BaseEntity {
             batch.draw(crown, pos.x-crown.getWidth()/6, pos.y+sprite.getHeight()/2, sprite.getWidth()/2, sprite.getWidth()/2);
         }
         if(dispboard){
+            bitmapFont.draw(batch, "User", camera.position.x - Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 +15);
+            bitmapFont.draw(batch, "Health", camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 +15);
+            bitmapFont.draw(batch, "Kills", camera.position.x, camera.position.y + Constants.SCREEN.y / 3 +15);
+            bitmapFont.draw(batch, "Deaths", camera.position.x + Constants.SCREEN.x / 12, camera.position.y + Constants.SCREEN.y / 3 +15);
             bitmapFont.draw(batch, name, camera.position.x - Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 -i*15);
             bitmapFont.draw(batch, Float.toString(health), camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 - i*15);
+            bitmapFont.draw(batch, Float.toString(kill), camera.position.x, camera.position.y + Constants.SCREEN.y / 3 - i*15);
+            bitmapFont.draw(batch, Float.toString(death), camera.position.x + Constants.SCREEN.x / 12, camera.position.y + Constants.SCREEN.y / 3 - i*15);
         }
     }
 
