@@ -2,10 +2,10 @@ package me.shreyasr.arrow.entity;
 
 import java.util.List;
 
+import me.shreyasr.arrow.Box;
+import me.shreyasr.arrow.CollisionDetector;
 import me.shreyasr.arrow.entity.attack.AttackBow;
 import me.shreyasr.arrow.input.PlayerInputMethod;
-import me.shreyasr.arrow.CollisionDetector;
-import me.shreyasr.arrow.Box;
 import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.util.CartesianPosition;
 
@@ -18,7 +18,7 @@ public class Player extends BaseEntity {
     private static final float HEIGHT = 16*4;
 
     private PlayerInputMethod inputMethod;
-    AttackBow attackBow;
+    public AttackBow attackBow;
 
     public Player(PlayerInputMethod inputMethod) {
         super("player", "player"+Integer.toString(random(10000)));
@@ -68,7 +68,6 @@ public class Player extends BaseEntity {
     }
 
     private void handleAttack(CartesianPosition atkDir, double delta) {
-        if (atkDir.isEmpty()) return;
         attackBow.update(delta, atkDir);
     }
 }

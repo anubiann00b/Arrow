@@ -2,6 +2,9 @@ package me.shreyasr.arrow.projectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import me.shreyasr.arrow.Box;
+import me.shreyasr.arrow.CollisionDetector;
+import me.shreyasr.arrow.Game;
 import me.shreyasr.arrow.graphics.Image;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.PolarVelocity;
@@ -43,6 +46,11 @@ public class Projectile {
         float newX = startPos.x + (float) (velocity.getSpeed()*Math.cos(velocity.getDirection())*timePassed/100f);
         float newY = startPos.y + (float) (velocity.getSpeed()*Math.sin(velocity.getDirection())*timePassed/100f);
         position = new CartesianPosition(newX, newY);
+        Box atk = new Box(position, 30, 30);
+        if (timePassed>800 && CollisionDetector.hasCollided(atk, Game.player.getBox())){
+            Game.player.health -= 10;
+            return false;
+        }
         return position.isInWorld(196);
     }
 
