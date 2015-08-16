@@ -15,7 +15,7 @@ public class AttackBow implements Attack {
         private int spreadAngle = 0;
         private int barrageShots = 0;
         private int pierce = 1;
-        private int damage = 1;
+        private int damage = 10;
         private int speed = 8;
 
         public Builder setFireTime(int fireTime) {
@@ -71,6 +71,10 @@ public class AttackBow implements Attack {
     private final int pierce;
     private final int damage;
     private final int speed;
+
+    public int getDamage(){
+        return damage;
+    }
 
     private AttackBow(int fireTime, int reloadTime, int spreadShots, int barrageShots,
                       int spread, int pierce, int damage, int speed) {

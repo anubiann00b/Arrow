@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import me.shreyasr.arrow.entity.BaseEntity;
@@ -29,6 +30,7 @@ import me.shreyasr.arrow.projectiles.Projectile;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
 import me.shreyasr.arrow.util.PolarVelocity;
+import me.shreyasr.arrow.util.ObstacleGenerator;
 
 public class Game extends ApplicationAdapter {
 
@@ -37,7 +39,8 @@ public class Game extends ApplicationAdapter {
     SpriteBatch batch;
     List<BaseEntity> entities;
     private Map<ProjectileID, Projectile> projectiles = new ConcurrentHashMap<ProjectileID, Projectile>();
-    public List<Obstacle> obstacles;
+    public static List<Obstacle> obstacles;
+    public static List<Obstacle> powerups;
     PlayerInputMethod inputMethod;
     InputMultiplexer inputMultiplexer;
     public static OrthographicCamera camera;
@@ -65,13 +68,21 @@ public class Game extends ApplicationAdapter {
         batch = new SpriteBatch();
         player = new Player(inputMethod);
         entities = new ArrayList<BaseEntity>();
-        player = new Player(inputMethod);
         shapeRenderer = new ShapeRenderer();
         entities.add(player);
         inputMethod.setPlayer(player);
         tileImage = new Image("grass");
 
+        obstacles = new ArrayList<Obstacle>();
+        obstacles.addAll(ObstacleGenerator.generate("badTree", 25, 100, 5000,
+                100, 5000));
 
+        powerups = new ArrayList<Obstacle>();
+        powerups.addAll(new ObstacleGenerator().generate("fire_arrow", 50, 100, 5000,
+                100, 5000));
+        for (Obstacle p : powerups) {
+            System.out.println(p.getPosition().x + " " + p.getPosition().y);
+        }
 
         inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -89,12 +100,19 @@ public class Game extends ApplicationAdapter {
             delta = (double) 60/Gdx.graphics.getFramesPerSecond();
 
         for (BaseEntity entity : entities) {
-            entity.update(delta);
+            entity.update(delta, obstacles, powerups);
+        }
+
+        for (Obstacle obstacle : obstacles) {
+            obstacle.update();
+        }
+        for (Obstacle powerup : powerups) {
+            powerup.update();
         }
 
         for (Iterator<Projectile> iterator = projectiles.values().iterator(); iterator.hasNext(); ) {
             Projectile p = iterator.next();
-            boolean keep = p.update();
+            boolean keep = p.update(obstacles);
             if (!keep) iterator.remove();
         }
 
@@ -115,9 +133,17 @@ public class Game extends ApplicationAdapter {
             i++;
         }
 
+        for (Obstacle o : obstacles) {
+            o.render(batch);
+        }
+        for (Obstacle p : powerups) {
+            p.render(batch);
+        }
+
         for (Projectile p : projectiles.values()) {
             p.render(batch);
         }
+
         batch.end();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -150,7 +176,9 @@ public class Game extends ApplicationAdapter {
         shapeRenderer.end();
         */
     }
-        private void updateCamera() {
+
+
+    private void updateCamera() {
         float minX = Constants.SCREEN.x / 2;
         float maxX = Constants.WORLD.x - minX;
         float minY = Constants.SCREEN.y / 2;
@@ -256,11 +284,11 @@ public class Game extends ApplicationAdapter {
             }, new CollisionPacketHandler.Listener() {
                 @Override
                 public void onReceive(int projectileId, int playerId, int hitPlayerId) {
-                    System.out.println("Removing projectile");
                     projectiles.remove(new ProjectileID(playerId, projectileId));
                 }
         }
         );
         new Thread(networkHandler).start();
     }
+    private static Random random = new Random();
 }

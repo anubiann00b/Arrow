@@ -6,8 +6,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import java.util.List;
+
 import me.shreyasr.arrow.Constants;
 import me.shreyasr.arrow.graphics.EntitySprite;
+import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.util.CartesianPosition;
 
 
@@ -27,12 +30,12 @@ public abstract class BaseEntity {
         sprite = new EntitySprite(filePrefix, 166, 64);
         pos = new CartesianPosition(50, 50);
         this.name = name;
-        health = 80;
+        health = 100;
         score = 0;
         bitmapFont = new BitmapFont();
     }
 
-    public abstract boolean update(double delta);
+    public abstract boolean update(double delta, List<Obstacle> obstacles, List<Obstacle> powerups);
 
     public void render(SpriteBatch batch, double delta, OrthographicCamera camera, boolean dispboard, int i) {
         sprite.setDirection(dir);

@@ -4,7 +4,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import java.util.List;
+
+import me.shreyasr.arrow.Box;
+import me.shreyasr.arrow.CollisionDetector;
+import me.shreyasr.arrow.Game;
 import me.shreyasr.arrow.graphics.Image;
+import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.PolarVelocity;
 
@@ -42,11 +48,29 @@ public class Projectile {
     }
 
     /** True to keep, false to leave. */
-    public boolean update() {
+    public boolean update(List<Obstacle> obstacles) {
         long timePassed = System.currentTimeMillis() - beginningTime;
         float newX = startPos.x + (float) (velocity.getSpeed()*Math.cos(velocity.getDirection())*timePassed/100f);
         float newY = startPos.y + (float) (velocity.getSpeed()*Math.sin(velocity.getDirection())*timePassed/100f);
         position = new CartesianPosition(newX, newY);
+        Box atk = new Box(position, 30, 30);
+//        if (timePassed>800 && CollisionDetector.hasCollided(atk, Game.player.getBox())){
+//            if(Game.player.health<Game.player.attackBow.getDamage()){
+//                Game.player.health = 0;
+//            } else{
+//                Game.player.health -= Game.player.attackBow.getDamage();
+//            }
+//
+//            return false;
+//        }
+        for (Obstacle obstacle : obstacles) {
+            if (CollisionDetector.hasCollided(
+                    new Box(obstacle.getPosition(), obstacle.getWidth(), obstacle.getHeight()),
+                    new Box(position, 16, 16))
+                    ){
+                return false;
+            }
+        }
         return position.isInWorld(196);
     }
 

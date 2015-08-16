@@ -16,6 +16,7 @@ import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import me.shreyasr.arrow.model.ObstacleModel;
 import me.shreyasr.arrow.model.PlayerModel;
 import me.shreyasr.arrow.model.ProjectileModel;
 import me.shreyasr.arrow.model.util.CartesianPosition;
@@ -27,6 +28,7 @@ public class ClientManager {
     private final List<Client> clients = new ArrayList<Client>();
     private final Map<Integer, PlayerModel> players = new HashMap<Integer, PlayerModel>();
     private final Map<ProjectileID, ProjectileModel> projectiles = new HashMap<ProjectileID, ProjectileModel>();
+    private final Map<Integer, ObstacleModel> obstacles = new HashMap<Integer, ObstacleModel>();
     private final Queue<byte[]> packetQueue = new LinkedBlockingQueue<byte[]>();
     public final AtomicInteger clientCounter = new AtomicInteger();
     private static final int DAMAGE = 5;
@@ -66,22 +68,21 @@ public class ClientManager {
         synchronized (players) {
             //calculate damage taken and update model
             synchronized (projectiles) {
-                int damageTaken = 0;
                 for (PlayerModel player : players.values()) {
                     for (Iterator<ProjectileModel> iterator
                          = projectiles.values().iterator(); iterator.hasNext(); ) {
                         ProjectileModel projectile = iterator.next();
-                        if (projectile.playerID == player.playerId) continue;
-                        if (PlayerProjectileCollisionDetector.hasCollided(player, projectile)) {
-                            damageTaken += DAMAGE;
+                        if (projectile.playerID == player.playerId
+                                && System.currentTimeMillis()-projectile.beginningTime < 800) continue;
+                        if (ProjectileCollisionDetector.hasCollided(player, projectile)) {
                             iterator.remove();
 
-                            player.health -= 5;
+                            player.health -= DAMAGE;
 
                             // SEND PACKET NOTFYING CLIENT OF PROJECTILE REMOVAL
                             packetQueue.add(CollisionPacketHandler.encodePacket(
                                     projectile.projectileID, projectile.playerID, player.playerId));
-                            System.out.println(projectile.playerID + " hit " + player.playerId);
+//                            System.out.println(projectile.playerID + " hit " + player.playerId);
                         } else {
 //                            System.out.println("miss");
                         }

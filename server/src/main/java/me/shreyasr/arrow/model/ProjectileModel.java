@@ -6,8 +6,6 @@ import me.shreyasr.arrow.model.util.PolarVelocity;
 public class ProjectileModel {
 
     private static final int LENGTH = 16*4;
-    private static final int CENTER_X = 7*4;
-    private static final int CENTER_Y = 7*4;
 
     public final int projectileID;
     public final int playerID;
@@ -26,14 +24,6 @@ public class ProjectileModel {
 
     public int getLength() {
         return LENGTH;
-    }
-
-    public int getCenterX() {
-        return CENTER_X;
-    }
-
-    public int getCenterY() {
-        return CENTER_Y;
     }
 
     public CartesianPosition calculatePosition(long time) {
