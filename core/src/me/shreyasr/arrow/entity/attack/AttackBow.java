@@ -15,7 +15,7 @@ public class AttackBow implements Attack {
         private int spreadAngle = 0;
         private int barrageShots = 0;
         private int pierce = 1;
-        private int damage = 10;
+        private int damage = 5;
         private int speed = 8;
         private long powerupTimer =0;
         private long startTime=0;
@@ -120,7 +120,7 @@ public class AttackBow implements Attack {
             double startDir = target.getDir() - spread * spreadShots /2;
             if(powerup==1 && (powerupTimer <= (System.currentTimeMillis()- startTime))){
                 powerup = 0;
-                damage = 1;
+                damage = 5;
             }
             for(int i=0;i< spreadShots;i++) {
                 if(powerup==1){
