@@ -309,6 +309,13 @@ public class Game extends ApplicationAdapter {
                         }
                     });
                 }
+            }, new DeathPacketHandler.Listener() {
+                @Override
+                public void onReceive(int killerId, int victimId) {
+                    if (networkHandler.clientId == victimId) {
+                        
+                    }
+                }
             }
         );
         new Thread(networkHandler).start();

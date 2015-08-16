@@ -10,12 +10,14 @@ public class PacketRouter {
     public final ProjectilePacketHandler projectilePacketHandler;
     public final CollisionPacketHandler collisionPacketHandler;
     public final NameChangePacketHandler nameChangePacketHandler;
+    public final DeathPacketHandler deathPacketHandler;
 
     public PacketRouter() {
         playerPacketHandler = new PlayerPacketHandler();
         projectilePacketHandler = new ProjectilePacketHandler();
         collisionPacketHandler = new CollisionPacketHandler();
         nameChangePacketHandler = new NameChangePacketHandler();
+        deathPacketHandler = new DeathPacketHandler();
     }
 
     public void handleIncomingPacket(byte[] data) {

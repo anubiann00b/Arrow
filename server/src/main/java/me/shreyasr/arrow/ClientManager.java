@@ -79,8 +79,12 @@ public class ClientManager {
 
                         player.health -= DAMAGE;
 
-                        packetQueue.add(CollisionPacketHandler.encodePacket(
-                                projectile.projectileID, projectile.playerID, player.playerId));
+                        if (player.health > 0) {
+                            packetQueue.add(CollisionPacketHandler.encodePacket(
+                                    projectile.projectileID, projectile.playerID, player.playerId));
+                        } else {
+                            KILL_PLAYER(projectile.playerID, player.playerId);
+                        }
 //                            System.out.println(projectile.playerID + " hit " + player.playerId);
                     } else {
 //                            System.out.println("miss");
@@ -105,6 +109,10 @@ public class ClientManager {
                 }
             }
         }
+    }
+
+    private void KILL_PLAYER(int killerId, int victimId) {
+        packetQueue.add(DeathPacketHandler.encodePacket(killerId, victimId));
     }
 
     public void addClient(Client client) {
