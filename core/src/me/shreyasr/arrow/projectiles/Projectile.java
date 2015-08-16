@@ -48,7 +48,12 @@ public class Projectile {
         position = new CartesianPosition(newX, newY);
         Box atk = new Box(position, 30, 30);
         if (timePassed>800 && CollisionDetector.hasCollided(atk, Game.player.getBox())){
-            Game.player.health -= 10;
+            if(Game.player.health<Game.player.attackBow.getDamage()){
+                Game.player.health = 0;
+            } else{
+                Game.player.health -= Game.player.attackBow.getDamage();
+            }
+
             return false;
         }
         return position.isInWorld(196);
