@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import me.shreyasr.arrow.entity.BaseEntity;
@@ -31,8 +30,8 @@ import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.projectiles.Projectile;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
-import me.shreyasr.arrow.util.PolarVelocity;
 import me.shreyasr.arrow.util.ObstacleGenerator;
+import me.shreyasr.arrow.util.PolarVelocity;
 
 public class Game extends ApplicationAdapter {
 
@@ -313,12 +312,18 @@ public class Game extends ApplicationAdapter {
                 @Override
                 public void onReceive(int killerId, int victimId) {
                     if (networkHandler.clientId == victimId) {
-                        
+
                     }
+
+                    runnableQueue.offer(new Runnable() {
+                        @Override
+                        public void run() {
+                            // do any data changing here
+                        }
+                    });
                 }
             }
         );
         new Thread(networkHandler).start();
     }
-    private static Random random = new Random();
 }
