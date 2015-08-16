@@ -21,7 +21,6 @@ import me.shreyasr.arrow.model.PlayerModel;
 import me.shreyasr.arrow.model.ProjectileModel;
 import me.shreyasr.arrow.model.util.CartesianPosition;
 import me.shreyasr.arrow.model.util.PolarVelocity;
-import me.shreyasr.arrow.model.util.Projectile;
 
 public class ClientManager {
 
@@ -65,49 +64,44 @@ public class ClientManager {
     }
 
     private void updateClients() {
-        synchronized (players) {
-            //calculate damage taken and update model
-            synchronized (projectiles) {
-                for (PlayerModel player : players.values()) {
-                    for (Iterator<ProjectileModel> iterator
-                         = projectiles.values().iterator(); iterator.hasNext(); ) {
-                        ProjectileModel projectile = iterator.next();
-                        if (projectile.playerID == player.playerId
-                                && System.currentTimeMillis()-projectile.beginningTime < 800) continue;
-                        if (ProjectileCollisionDetector.hasCollided(player, projectile)) {
-                            iterator.remove();
+        //calculate damage taken and update model
+        synchronized (projectiles) {
+            for (PlayerModel player : new ArrayList<PlayerModel>(players.values())) {
+                for (Iterator<ProjectileModel> iterator
+                     = projectiles.values().iterator(); iterator.hasNext(); ) {
+                    ProjectileModel projectile = iterator.next();
+                    if (projectile.playerID == player.playerId
+                            && System.currentTimeMillis()-projectile.beginningTime < 800) continue;
+                    if (ProjectileCollisionDetector.hasCollided(player, projectile)) {
+                        iterator.remove();
 
-                            player.health -= DAMAGE;
+                        player.health -= DAMAGE;
 
-                            // SEND PACKET NOTFYING CLIENT OF PROJECTILE REMOVAL
-                            packetQueue.add(CollisionPacketHandler.encodePacket(
-                                    projectile.projectileID, projectile.playerID, player.playerId));
+                        packetQueue.add(CollisionPacketHandler.encodePacket(
+                                projectile.projectileID, projectile.playerID, player.playerId));
 //                            System.out.println(projectile.playerID + " hit " + player.playerId);
-                        } else {
+                    } else {
 //                            System.out.println("miss");
-                        }
-                        //but client is still rendering projectile
                     }
+                    //but client is still rendering projectile
                 }
             }
         }
-        synchronized (packetQueue) {
-            synchronized (udpClients) {
+        synchronized (udpClients) {
+            byte[] packet;
+            while ((packet = packetQueue.poll()) != null) {
                 for (Iterator<UdpClient> iterator = udpClients.iterator(); iterator.hasNext(); ) {
                     UdpClient client = iterator.next();
-                    for (byte[] packet : packetQueue) {
-                        try {
-                            socket.send(new DatagramPacket(packet, packet.length, client.ip, client.port));
+                    try {
+                        socket.send(new DatagramPacket(packet, packet.length, client.ip, client.port));
 //                            System.out.println("Send to " + client);
-                        } catch (IOException e) {
-                            Log.exception(e);
-                            iterator.remove();
-                            Log.m("Removed client: " + client);
-                        }
+                    } catch (IOException e) {
+                        Log.exception(e);
+                        iterator.remove();
+                        Log.m("Removed client: " + client);
                     }
                 }
             }
-            packetQueue.clear();
         }
     }
 
@@ -127,24 +121,22 @@ public class ClientManager {
         packetRouter.playerPacketHandler.addListener(new PlayerPacketHandler.Listener() {
             @Override
             public void onReceive(int playerId, int health, int x, int y, int direction) {
-                synchronized (players) {
-                    PlayerModel player;
-                    if (players.containsKey(playerId)) {
-                        player = players.get(playerId);
-                    } else {
-                        player = new PlayerModel(playerId);
-                        players.put(playerId, player);
-                    }
+                PlayerModel player;
+                if (players.containsKey(playerId)) {
+                    player = players.get(playerId);
+                } else {
+                    player = new PlayerModel(playerId);
+                    players.put(playerId, player);
+                }
 //                    System.out.println("Recv from " + player.playerId);
 
-                    player.x = x;
-                    player.y = y;
-                    player.direction = direction;
+                player.x = x;
+                player.y = y;
+                player.direction = direction;
 
-                    //prepare to write back to client
-                    packetQueue.add(PlayerPacketHandler
-                            .encodePacket(playerId, player.health, x, y, direction));
-                }
+                //prepare to write back to client
+                packetQueue.add(PlayerPacketHandler
+                        .encodePacket(playerId, player.health, x, y, direction));
             }
         });
         packetRouter.projectilePacketHandler.addListener(new ProjectilePacketHandler.Listener() {
