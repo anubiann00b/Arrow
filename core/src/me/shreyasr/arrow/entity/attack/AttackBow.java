@@ -17,6 +17,8 @@ public class AttackBow implements Attack {
         private int pierce = 1;
         private int damage = 10;
         private int speed = 8;
+        private long powerupTimer =0;
+        private long startTime=0;
 
         public Builder setFireTime(int fireTime) {
             this.fireTime = fireTime;
@@ -60,7 +62,6 @@ public class AttackBow implements Attack {
                     barrageShots, spreadAngle, pierce, damage, speed);
         }
     }
-
     private int timer;
     private int shotCounter;
     private final int fireTime;
@@ -69,11 +70,36 @@ public class AttackBow implements Attack {
     private final int spreadShots;
     private final double spread;
     private final int pierce;
-    private final int damage;
+    public static int damage;
+    public static int powerup;
+    public static long powerupTimer;
+    public static long startTime;
     private final int speed;
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+    public void setPowerup(int powerup) {
+        this.powerup = powerup;
+    }
+    public void setPowerupTimer(long powerupTimer){
+        this.powerupTimer = powerupTimer;
+    }
+    public void setStartTime(long startTime){
+        this.startTime = startTime;
+    }
 
     public int getDamage(){
         return damage;
+    }
+    public int getPowerup(){
+        return powerup;
+    }
+    public long getPowerupTimer(){
+        return powerupTimer;
+    }
+    public long getStartTime(){
+        return startTime;
     }
 
     private AttackBow(int fireTime, int reloadTime, int spreadShots, int barrageShots,
@@ -92,9 +118,18 @@ public class AttackBow implements Attack {
     public void update(double delta, CartesianPosition target) {
         if (timer<0 && !target.isEmpty()) {
             double startDir = target.getDir() - spread * spreadShots /2;
+            if(powerup==1 && (powerupTimer <= (System.currentTimeMillis()- startTime))){
+                powerup = 0;
+                damage = 1;
+            }
             for(int i=0;i< spreadShots;i++) {
-                Game.projectiles.add(new Projectile(new PolarVelocity((float)(startDir + i * spread), (float) speed),
-                        Game.player.pos, "arrow"));
+                if(powerup==1){
+                    Game.projectiles.add(new Projectile(new PolarVelocity((float) (startDir + i * spread), (float) speed),
+                            Game.player.pos, "fire_arrow"));
+                }else {
+                    Game.projectiles.add(new Projectile(new PolarVelocity((float) (startDir + i * spread), (float) speed),
+                            Game.player.pos, "arrow"));
+                }
             }
             if (shotCounter <= 0) {
                 timer = reloadTime;

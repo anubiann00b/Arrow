@@ -67,6 +67,7 @@ public class Projectile {
                 return false;
             }
         }
+
         return position.isInWorld(196);
     }
 

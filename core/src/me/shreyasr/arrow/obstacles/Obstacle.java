@@ -12,12 +12,16 @@ public class Obstacle {
     private float width;
     private float height;
     private static final float SCALE = 8.0f;
+    private int powerup;
 
     public Obstacle(String filename, int x, int y) {
         //hardcoded for badTree.png size at the moment
         this.width = 16*SCALE;
         this.height = 32*SCALE;
         this.image = new Image(filename);
+        if(filename.compareTo("fire_arrow")==0){
+            powerup=1;
+        }
         this.position = new CartesianPosition(x, y);
     }
 
@@ -40,6 +44,8 @@ public class Obstacle {
     public float getHeight() {
         return height;
     }
+
+    public int getPowerup() { return powerup; }
 
     public boolean update() {
         return true;

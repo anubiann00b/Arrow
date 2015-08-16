@@ -71,7 +71,7 @@ public class Game extends ApplicationAdapter {
         }
 
         powerups = new ArrayList<Obstacle>();
-        powerups.addAll(new ObstacleGenerator().generate("fire_arrow", 50, 100, 5000,
+        powerups.addAll(ObstacleGenerator.generate("fire_arrow", 50, 100, 5000,
                 100, 5000));
         for (Obstacle p : powerups) {
             System.out.println(p.getPosition().x + " " + p.getPosition().y);
