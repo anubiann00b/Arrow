@@ -9,8 +9,7 @@ public class PlayerPacketHandler implements PacketHandler {
     public static int TYPE = 0;
 
     public static byte[] encodePacket(int playerId, int health, int x, int y, int direction){
-        return ByteBuffer.wrap(new byte[PacketRouter.MAX_PACKET_SIZE])
-                .put((byte)42)
+        return ByteBuffer.wrap(new byte[24])
                 .putInt(TYPE)
                 .putInt(playerId)
                 .putInt(health)

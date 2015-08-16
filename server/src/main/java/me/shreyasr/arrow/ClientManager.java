@@ -1,12 +1,16 @@
 package me.shreyasr.arrow;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,32 +32,50 @@ public class ClientManager {
     private static final int DAMAGE = 5;
 
     PacketRouter packetRouter = new PacketRouter();
+    private DatagramSocket socket;
 
-    public void handlePacket(byte[] arr) {
+    final Set<UdpClient> udpClients = new HashSet<UdpClient>();
+
+    public void handleUdp(DatagramPacket packet) {
+        synchronized (udpClients) {
+            udpClients.add(new UdpClient(packet));
+        }
+        handlePacket(packet.getData());
+    }
+
+    private void handlePacket(byte[] arr) {
         packetRouter.handleIncomingPacket(arr);
     }
 
-    public ClientManager() {
+    public ClientManager(DatagramSocket socket) {
+        this.socket = socket;
         registerListeners();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                updateClients();
+                try {
+                    updateClients();
+                } catch (Exception e) {
+                    Log.exception(e);
+                }
             }
         }, 16, 16);
     }
 
     private void updateClients() {
         synchronized (packetQueue) {
-            for (Iterator<Client> iterator = clients.iterator(); iterator.hasNext(); ) {
-                Client client = iterator.next();
-                for (byte[] packet : packetQueue) {
-                    try {
-                        client.socket.getOutputStream().write(packet);
-                    } catch (IOException e) {
-                        Log.exception(e);
-                        iterator.remove();
-                        Log.m("Removed client: " + client.id);
+            synchronized (udpClients) {
+                for (Iterator<UdpClient> iterator = udpClients.iterator(); iterator.hasNext(); ) {
+                    UdpClient client = iterator.next();
+                    for (byte[] packet : packetQueue) {
+                        try {
+                            socket.send(new DatagramPacket(packet, packet.length, client.ip, client.port));
+//                            System.out.println("Send to " + client);
+                        } catch (IOException e) {
+                            Log.exception(e);
+                            iterator.remove();
+                            Log.m("Removed client: " + client);
+                        }
                     }
                 }
             }
@@ -85,6 +107,7 @@ public class ClientManager {
                         player = new PlayerModel(playerId);
                         players.put(playerId, player);
                     }
+//                    System.out.println("Recv from " + player.playerId);
 
                     player.x = x;
                     player.y = y;
