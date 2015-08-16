@@ -66,9 +66,6 @@ public class Game extends ApplicationAdapter {
         obstacles = new ArrayList<Obstacle>();
         obstacles.addAll(ObstacleGenerator.generate("badTree", 25, 100, 5000,
                 100, 5000));
-        for (Obstacle o : obstacles) {
-            System.out.println(o.getPosition().x + " " + o.getPosition().y);
-        }
 
         powerups = new ArrayList<Obstacle>();
         powerups.addAll(ObstacleGenerator.generate("fire_arrow", 50, 100, 5000,
