@@ -60,12 +60,6 @@ public class Game extends ApplicationAdapter {
         inputMethod.setPlayer(player);
         tileImage = new Image("grass");
 
-        int numObstacles = 10;
-        obstacles = new ArrayList<Obstacle>();
-        for (i = 0; i < numObstacles; i++) {
-            while ()
-        }
-
         inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer);
         inputMultiplexer.addProcessor(inputMethod);
