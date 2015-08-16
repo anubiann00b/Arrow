@@ -19,7 +19,6 @@ public class Player extends BaseEntity {
 
     private PlayerInputMethod inputMethod;
     public AttackBow attackBow;
-    public int powerup;
     public double powerupStartTime;
 
     public Player(PlayerInputMethod inputMethod) {
@@ -55,6 +54,14 @@ public class Player extends BaseEntity {
         }
         for (Obstacle p : powerups) {
             if (CollisionDetector.hasCollided(this.getBox(),p.getBox())) {
+                int x = p.getPowerup();
+                if (x==1){
+                    attackBow.setPowerup(x);
+                    attackBow.setPowerupTimer(5000);
+                    long t = System.currentTimeMillis();
+                    attackBow.setStartTime(t);
+                    attackBow.setDamage(10);
+                }
                 powerups.remove(p);
                 break;
             }

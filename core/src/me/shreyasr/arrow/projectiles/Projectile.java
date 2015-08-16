@@ -2,13 +2,11 @@ package me.shreyasr.arrow.projectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.shreyasr.arrow.Box;
 import me.shreyasr.arrow.CollisionDetector;
-import me.shreyasr.arrow.Game;
 import me.shreyasr.arrow.graphics.Image;
 import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.util.CartesianPosition;
@@ -71,6 +69,7 @@ public class Projectile {
                 return false;
             }
         }
+
         return position.isInWorld(196);
     }
 
