@@ -9,8 +9,7 @@ public class CollisionPacketHandler implements PacketHandler {
     public static int TYPE = 2;
 
     public static byte[] encodePacket(int projectileId, int playerId, int hitPlayerId) {
-        return ByteBuffer.wrap(new byte[PacketRouter.MAX_PACKET_SIZE])
-                .put((byte)42)
+        return ByteBuffer.wrap(new byte[16])
                 .putInt(TYPE)
                 .putInt(projectileId)
                 .putInt(playerId)

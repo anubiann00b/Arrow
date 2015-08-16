@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import me.shreyasr.arrow.Game;
+import me.shreyasr.arrow.input.AndroidPlayerInputMethod;
 
 public class AndroidLauncher extends AndroidApplication {
 
@@ -12,6 +13,6 @@ public class AndroidLauncher extends AndroidApplication {
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-        initialize(new Game(null, "52.8.127.253"), config);
+        initialize(new Game(new AndroidPlayerInputMethod(), "52.8.127.253"), config);
     }
 }

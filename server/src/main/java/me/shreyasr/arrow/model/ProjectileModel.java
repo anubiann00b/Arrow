@@ -8,8 +8,6 @@ public class ProjectileModel {
     private Projectile projectile;
     public final int playerID;
     private static final int LENGTH = 16*4;
-    private static final int CENTER_X = 7*4;
-    private static final int CENTER_Y = 7*4;
 
     public ProjectileModel(int projectileID, int playerID,
                            Projectile projectile) {
@@ -20,14 +18,6 @@ public class ProjectileModel {
 
     public int getLength() {
         return LENGTH;
-    }
-
-    public int getCenterX() {
-        return CENTER_X;
-    }
-
-    public int getCenterY() {
-        return CENTER_Y;
     }
 
     public void updateProjectile() {

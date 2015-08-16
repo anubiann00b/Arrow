@@ -1,7 +1,6 @@
 package me.shreyasr.arrow;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class PacketRouter {
 
@@ -19,11 +18,6 @@ public class PacketRouter {
 
     public void handleIncomingPacket(byte[] data) {
         ByteBuffer buffer = ByteBuffer.wrap(data);
-
-        byte sanityCheck = buffer.get();
-        if (sanityCheck != 42) {
-            System.out.println("Failed sanity check! " + Arrays.toString(data));
-        }
 
         int type = buffer.getInt();
 

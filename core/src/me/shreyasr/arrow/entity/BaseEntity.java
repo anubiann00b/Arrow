@@ -9,8 +9,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import java.util.List;
+
 import me.shreyasr.arrow.Constants;
 import me.shreyasr.arrow.graphics.EntitySprite;
+import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.util.CartesianPosition;
 
 
@@ -32,12 +35,12 @@ public abstract class BaseEntity {
         sprite = new EntitySprite(filePrefix, 166, 64);
         pos = new CartesianPosition(50, 50);
         this.name = name;
-        health = 80;
+        health = 100;
         score = 0;
         bitmapFont = new BitmapFont();
     }
 
-    public abstract boolean update(double delta);
+    public abstract boolean update(double delta, List<Obstacle> obstacles, List<Obstacle> powerups);
 
     public void render(SpriteBatch batch, double delta, OrthographicCamera camera, boolean dispboard, int i) {
         sprite.setDirection(dir);
@@ -52,8 +55,8 @@ public abstract class BaseEntity {
             batch.draw(crown, pos.x-crown.getWidth()/6, pos.y+sprite.getHeight()/2, sprite.getWidth()/2, sprite.getWidth()/2);
         }
         if(dispboard){
-            bitmapFont.draw(batch, name, camera.position.x - Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 -i*10);
-            bitmapFont.draw(batch, Float.toString(score), camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 - i*10);
+            bitmapFont.draw(batch, name, camera.position.x - Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 -i*15);
+            bitmapFont.draw(batch, Float.toString(score), camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 - i*15);
         }
     }
 
