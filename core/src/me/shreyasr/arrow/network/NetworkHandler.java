@@ -57,6 +57,7 @@ public class NetworkHandler implements Runnable {
             );
         } catch (IOException e) {
             Log.exception(e);
+            socket = null;
         }
     }
 }

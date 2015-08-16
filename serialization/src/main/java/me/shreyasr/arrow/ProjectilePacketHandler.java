@@ -11,6 +11,7 @@ public class ProjectilePacketHandler implements PacketHandler {
     public static byte[] encodePacket(int playerId, int projectileId, int startX, int startY,
                                       long startTime, double direction, int velocity) {
         return ByteBuffer.wrap(new byte[PacketRouter.MAX_PACKET_SIZE])
+                .put((byte)42)
                 .putInt(TYPE)
                 .putInt(playerId)
                 .putInt(projectileId)

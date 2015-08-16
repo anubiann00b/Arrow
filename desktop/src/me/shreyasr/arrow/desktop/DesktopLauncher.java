@@ -9,8 +9,8 @@ public class DesktopLauncher {
 
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 800;
-        config.height = 600;
+        config.width = 400;
+        config.height = 300;
         String ip = args.length == 0 ? "54.67.114.47" : "127.0.0.1";
         new LwjglApplication(new Game(new KeyboardPlayerInputMethod(), ip), config);
     }
