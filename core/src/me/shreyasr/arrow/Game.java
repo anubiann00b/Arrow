@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import me.shreyasr.arrow.entity.BaseEntity;
@@ -41,6 +42,7 @@ public class Game extends ApplicationAdapter {
     NetworkHandler networkHandler;
     final String ip;
     Queue<Runnable> runnableQueue = new LinkedBlockingQueue<Runnable>();
+    private Random random;
 
     public Game(PlayerInputMethod inputMethod, String ip) {
         this.inputMethod = inputMethod;
@@ -57,6 +59,12 @@ public class Game extends ApplicationAdapter {
         entities.add(player);
         inputMethod.setPlayer(player);
         tileImage = new Image("grass");
+
+        int numObstacles = 10;
+        obstacles = new ArrayList<Obstacle>();
+        for (i = 0; i < numObstacles; i++) {
+            while ()
+        }
 
         inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -140,11 +148,12 @@ public class Game extends ApplicationAdapter {
     public static void change_name(){
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
-            public void input (String text) {
-                player.name =  text;
+            public void input(String text) {
+                player.name = text;
             }
+
             @Override
-            public void canceled () {
+            public void canceled() {
 
             }
         }, "New player name?", player.name, "");

@@ -12,9 +12,9 @@ public class Obstacle {
     private final int width;
     private final int height;
 
-    public Obstacle(String imgFileLocation, CartesianPosition oPosition, int width,
-                    int height) {
-        image = new Image(imgFileLocation);
+    public Obstacle(String imgFileLocation, CartesianPosition oPosition, int startX, int startY,
+                    int width, int height) {
+        image = new Image(imgFileLocation);  //but use a different constructor
         position = oPosition;
         this.width = width;
         this.height = height;
