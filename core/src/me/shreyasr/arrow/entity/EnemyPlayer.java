@@ -7,6 +7,7 @@ import me.shreyasr.arrow.obstacles.Obstacle;
 public class EnemyPlayer extends BaseEntity {
 
     public final int id;
+    public long lastUpdated;
 
     public EnemyPlayer(String name, int id) {
         super("player", name);
@@ -15,6 +16,6 @@ public class EnemyPlayer extends BaseEntity {
 
     @Override
     public boolean update(double delta, List<Obstacle> obstacles, List<Obstacle> powerups) {
-        return false;
+        return System.currentTimeMillis() - lastUpdated > 5000;
     }
 }

@@ -258,6 +258,7 @@ public class Game extends ApplicationAdapter {
                                 entity.health = health;
                                 entity.pos = new CartesianPosition(x, y);
                                 entity.dir = dir;
+                                ((EnemyPlayer) entity).lastUpdated = System.currentTimeMillis();
                                 found = true;
                                 break;
                             }

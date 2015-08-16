@@ -83,8 +83,6 @@ public class NetworkHandler implements Runnable {
     }
 
     public void update(Player p) {
-        if (socket == null) return;
-        if (clientId == -1) return;
         byte[] data = PlayerPacketHandler
                 .encodePacket(clientId, p.health, (int) p.pos.x, (int) p.pos.y, p.dir);
         send(data);
@@ -98,6 +96,8 @@ public class NetworkHandler implements Runnable {
     }
 
     private synchronized void send(byte[] data) {
+        if (socket == null) return;
+        if (clientId == -1) return;
         try {
             socket.send(new DatagramPacket(data, data.length, inetAddress, 9998));
         } catch (IOException e) {

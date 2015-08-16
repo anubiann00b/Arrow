@@ -14,6 +14,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,6 +33,7 @@ public class ClientManager {
     private LinkedHashMap<Integer, String> messageQueue = new LinkedHashMap<Integer, String>();
     private final Queue<byte[]> packetQueue = new LinkedBlockingQueue<byte[]>();
     public final AtomicInteger clientCounter = new AtomicInteger();
+    public final Map<UdpClient, Long> updateTimes = new ConcurrentHashMap<UdpClient, Long>();
     private static final int DAMAGE = 5;
 
     PacketRouter packetRouter = new PacketRouter();
@@ -40,14 +42,20 @@ public class ClientManager {
     final Set<UdpClient> udpClients = new HashSet<UdpClient>();
 
     public void handleUdp(DatagramPacket packet) {
+        UdpClient udpClient;
         synchronized (udpClients) {
-            udpClients.add(new UdpClient(packet));
+            udpClient = new UdpClient(packet);
+            udpClients.add(udpClient);
         }
-        handlePacket(packet.getData());
+        handlePacket(packet.getData(), udpClient);
     }
 
-    private void handlePacket(byte[] arr) {
+    private void handlePacket(byte[] arr, UdpClient udpClient) {
         packetRouter.handleIncomingPacket(arr);
+
+        synchronized (updateTimes) {
+            updateTimes.put(udpClient, System.currentTimeMillis());
+        }
     }
 
     public ClientManager(DatagramSocket socket) {
@@ -65,7 +73,19 @@ public class ClientManager {
         }, 16, 16);
     }
 
+    int cnt = 0;
     private void updateClients() {
+        if (cnt++%100 == 0) {
+            Set<Map.Entry<UdpClient, Long>> keyset
+                    = new HashSet<Map.Entry<UdpClient, Long>>(updateTimes.entrySet());
+            for (Map.Entry<UdpClient, Long> entry : keyset) {
+                if (System.currentTimeMillis() - entry.getValue() > 1000) {
+                    updateTimes.remove(entry.getKey());
+                    udpClients.remove(entry.getKey());
+                    System.out.println("Disconnecting: " + entry.getKey());
+                }
+            }
+        }
         //calculate damage taken and update model
         synchronized (projectiles) {
             for (PlayerModel player : new ArrayList<PlayerModel>(players.values())) {
@@ -79,10 +99,9 @@ public class ClientManager {
 
                         player.health -= DAMAGE;
 
-                        if (player.health > 0) {
                             packetQueue.add(CollisionPacketHandler.encodePacket(
                                     projectile.projectileID, projectile.playerID, player.playerId));
-                        } else {
+                        if (player.health <= 0) {
                             KILL_PLAYER(projectile.playerID, player.playerId);
                         }
 //                            System.out.println(projectile.playerID + " hit " + player.playerId);

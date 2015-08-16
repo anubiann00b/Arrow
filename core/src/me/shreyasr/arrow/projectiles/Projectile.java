@@ -1,5 +1,6 @@
 package me.shreyasr.arrow.projectiles;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.List;
