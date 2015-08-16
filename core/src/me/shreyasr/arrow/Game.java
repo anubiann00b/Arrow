@@ -242,6 +242,7 @@ public class Game extends ApplicationAdapter {
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
             public void input(String text) {
+                addMessage("Changed name to " + text);
                 player.name = text;
                 inst.networkHandler.updateName(text);
 
@@ -251,8 +252,6 @@ public class Game extends ApplicationAdapter {
             public void canceled() {
             }
         }, "New player name?", player.name, "");
-
-        addMessage("Changed name to " + player.name);
     }
 
     public static CartesianPosition getCameraPos() {
