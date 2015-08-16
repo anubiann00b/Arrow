@@ -155,5 +155,11 @@ public class ClientManager {
                         startY, startTime, direction, speed));
             }
         });
+        packetRouter.nameChangePacketHandler.addListener(new NameChangePacketHandler.Listener() {
+            @Override
+            public void onReceive(int playerId, String name) {
+                packetQueue.add(NameChangePacketHandler.encodePacket(playerId, name));
+            }
+        });
     }
 }

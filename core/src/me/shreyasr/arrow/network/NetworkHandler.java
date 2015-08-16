@@ -9,6 +9,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import me.shreyasr.arrow.CollisionPacketHandler;
+import me.shreyasr.arrow.NameChangePacketHandler;
 import me.shreyasr.arrow.PacketRouter;
 import me.shreyasr.arrow.PlayerPacketHandler;
 import me.shreyasr.arrow.ProjectilePacketHandler;
@@ -27,7 +28,7 @@ public class NetworkHandler implements Runnable {
     public NetworkHandler(String ipAddress,
                           PlayerPacketHandler.Listener playerPacketListener,
                           ProjectilePacketHandler.Listener projectilePacketListener,
-                          CollisionPacketHandler.Listener collisionPacketHandler) {
+                          CollisionPacketHandler.Listener collisionPacketHandler, NameChangePacketHandler.Listener listener) {
         this.ipAddress = ipAddress;
         try {
             inetAddress = InetAddress.getByName(ipAddress);
@@ -86,8 +87,8 @@ public class NetworkHandler implements Runnable {
 
     public void sendProjectile(Projectile p) {
         byte[] data = ProjectilePacketHandler.encodePacket(clientId, p.id,
-                (int)p.startPos.x, (int)p.startPos.y, p.beginningTime,
-                p.velocity.getDirection(), (int)p.velocity.getSpeed());
+                (int) p.startPos.x, (int) p.startPos.y, p.beginningTime,
+                p.velocity.getDirection(), (int) p.velocity.getSpeed());
         send(data);
     }
 
@@ -98,5 +99,9 @@ public class NetworkHandler implements Runnable {
             Log.exception(e);
             socket = null;
         }
+    }
+
+    public void updateName(String newName) {
+        send(NameChangePacketHandler.encodePacket(clientId, newName));
     }
 }

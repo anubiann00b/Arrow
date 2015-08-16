@@ -215,18 +215,15 @@ public class Game extends ApplicationAdapter {
         }
     }
 
-    /* Doesn't work properly at the moment... */
     public static void change_name(){
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
             public void input(String text) {
                 player.name = text;
+                inst.networkHandler.updateName(text);
             }
 
-            @Override
-            public void canceled() {
-
-            }
+            @Override public void canceled() { }
         }, "New player name?", player.name, "");
     }
 
@@ -271,7 +268,9 @@ public class Game extends ApplicationAdapter {
                             runnableQueue.offer(new Runnable() {
                                 @Override
                                 public void run() {
-                                    entities.add(new EnemyPlayer("ayyyy", playerId));
+                                    synchronized (entities) {
+                                        entities.add(new EnemyPlayer("ayyyy", playerId));
+                                    }
                                     protectedIds.remove((Integer) playerId);
                                 }
                             });
@@ -293,11 +292,24 @@ public class Game extends ApplicationAdapter {
                     });
                 }
             }, new CollisionPacketHandler.Listener() {
+                    @Override
+                    public void onReceive(int projectileId, int playerId, int hitPlayerId) {
+                        projectiles.remove(new ProjectileID(playerId, projectileId));
+                    }
+            }, new NameChangePacketHandler.Listener() {
                 @Override
-                public void onReceive(int projectileId, int playerId, int hitPlayerId) {
-                    projectiles.remove(new ProjectileID(playerId, projectileId));
+                public void onReceive(final int playerId, final String name) {
+                    runnableQueue.offer(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (BaseEntity entity : entities) {
+                                if (entity instanceof EnemyPlayer && ((EnemyPlayer)entity).id == playerId)
+                                    entity.name = name;
+                            }
+                        }
+                    });
                 }
-        }
+            }
         );
         new Thread(networkHandler).start();
     }

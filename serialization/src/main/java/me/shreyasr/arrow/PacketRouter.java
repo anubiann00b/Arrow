@@ -9,11 +9,13 @@ public class PacketRouter {
     public final PlayerPacketHandler playerPacketHandler;
     public final ProjectilePacketHandler projectilePacketHandler;
     public final CollisionPacketHandler collisionPacketHandler;
+    public final NameChangePacketHandler nameChangePacketHandler;
 
     public PacketRouter() {
         playerPacketHandler = new PlayerPacketHandler();
         projectilePacketHandler = new ProjectilePacketHandler();
         collisionPacketHandler = new CollisionPacketHandler();
+        nameChangePacketHandler = new NameChangePacketHandler();
     }
 
     public void handleIncomingPacket(byte[] data) {
