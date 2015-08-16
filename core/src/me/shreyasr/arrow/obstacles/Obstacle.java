@@ -7,6 +7,7 @@ import me.shreyasr.arrow.util.CartesianPosition;
 
 public class Obstacle {
 
+    private int type = 0;
     private Image image;
     private CartesianPosition position;
     private float width;
@@ -18,6 +19,14 @@ public class Obstacle {
         this.width = 16*SCALE;
         this.height = 32*SCALE;
         this.image = new Image(filename);
+        this.position = new CartesianPosition(x, y);
+    }
+
+    public Obstacle(int type, String filename, int x, int y){
+        this.type = type;
+        this.image = new Image(filename);
+        this.width = image.getWidth();
+        this.height = image.getHeight();
         this.position = new CartesianPosition(x, y);
     }
 

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,13 +29,17 @@ import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
 import me.shreyasr.arrow.util.ObstacleGenerator;
 
+
+import static com.badlogic.gdx.math.MathUtils.random;
+
 public class Game extends ApplicationAdapter {
 
     BitmapFont font;
     SpriteBatch batch;
     List<BaseEntity> entities;
     public static List<Projectile> projectiles = new ArrayList<Projectile>();
-    public static List<Obstacle> obstacles;
+    public static List<Obstacle> obstacles = new ArrayList<Obstacle>();
+    public static List<Obstacle> powerups;
     PlayerInputMethod inputMethod;
     InputMultiplexer inputMultiplexer;
     public static OrthographicCamera camera;
@@ -45,6 +50,9 @@ public class Game extends ApplicationAdapter {
     final String ip;
     Queue<Runnable> runnableQueue = new LinkedBlockingQueue<Runnable>();
     static boolean dispboard = false;
+    //Timer sprawnPowerUp = new Timer();
+    //sprawnPowerUp.Task.scheduleTask(com.badlogic.gdx.utils.Timer)
+
 
     public Game(PlayerInputMethod inputMethod, String ip) {
         this.inputMethod = inputMethod;
@@ -73,13 +81,13 @@ public class Game extends ApplicationAdapter {
         inputMultiplexer.addProcessor(inputMethod);
 
         camera = new OrthographicCamera(Constants.SCREEN.x*768f/Constants.SCREEN.y, 768);
-
         setUpNetworkHandler();
     }
 
     @Override
     public void render() {
         double delta = 1;
+
         if (Gdx.graphics.getFramesPerSecond() != 0)
             delta = (double) 60/Gdx.graphics.getFramesPerSecond();
 
@@ -117,6 +125,12 @@ public class Game extends ApplicationAdapter {
         for (Obstacle o : obstacles) {
             o.render(batch);
         }
+        /*
+        powerups.add(random_powerup_generator());
+        for (Obstacle o : powerups) {
+            o.render(batch);
+        }
+        */
 
         for (Projectile p : projectiles) {
             p.render(batch);
@@ -176,7 +190,16 @@ public class Game extends ApplicationAdapter {
     public static CartesianPosition getCameraPos() {
         return new CartesianPosition(camera.position.x, camera.position.y);
     }
-
+    /*
+    public Obstacle random_powerup_generator(){
+        int obs = random(0);
+        switch (obs+1) {
+            case 1:
+                return new Obstacle(1, "circle", random(5000), random(5000));
+        }
+        return null;
+    }
+    */
     List<Integer> protectedIds = new ArrayList<Integer>();
 
     public static void toggledisp(){
