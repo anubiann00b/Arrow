@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import me.shreyasr.arrow.entity.BaseEntity;
@@ -35,6 +36,7 @@ public class Game extends ApplicationAdapter {
     List<BaseEntity> entities;
     public static List<Projectile> projectiles = new ArrayList<Projectile>();
     public static List<Obstacle> obstacles;
+    public static List<Obstacle> powerups;
     PlayerInputMethod inputMethod;
     InputMultiplexer inputMultiplexer;
     public static OrthographicCamera camera;
@@ -62,10 +64,17 @@ public class Game extends ApplicationAdapter {
         tileImage = new Image("grass");
 
         obstacles = new ArrayList<Obstacle>();
-        obstacles.addAll(ObstacleGenerator.generate("badTree", 50, 100, 5000,
+        obstacles.addAll(ObstacleGenerator.generate("badTree", 25, 100, 5000,
                 100, 5000));
         for (Obstacle o : obstacles) {
             System.out.println(o.getPosition().x + " " + o.getPosition().y);
+        }
+
+        powerups = new ArrayList<Obstacle>();
+        powerups.addAll(new ObstacleGenerator().generate("fire_arrow", 50, 100, 5000,
+                100, 5000));
+        for (Obstacle p : powerups) {
+            System.out.println(p.getPosition().x + " " + p.getPosition().y);
         }
 
         inputMultiplexer = new InputMultiplexer();
@@ -84,11 +93,14 @@ public class Game extends ApplicationAdapter {
             delta = (double) 60/Gdx.graphics.getFramesPerSecond();
 
         for (BaseEntity entity : entities) {
-            entity.update(delta, obstacles);
+            entity.update(delta, obstacles, powerups);
         }
 
         for (Obstacle obstacle : obstacles) {
             obstacle.update();
+        }
+        for (Obstacle powerup : powerups) {
+            powerup.update();
         }
 
         for (Iterator<Projectile> iterator = projectiles.iterator(); iterator.hasNext(); ) {
@@ -116,6 +128,9 @@ public class Game extends ApplicationAdapter {
 
         for (Obstacle o : obstacles) {
             o.render(batch);
+        }
+        for (Obstacle p : powerups) {
+            p.render(batch);
         }
 
         for (Projectile p : projectiles) {
@@ -219,4 +234,5 @@ public class Game extends ApplicationAdapter {
                 });
         new Thread(networkHandler).start();
     }
+    private static Random random = new Random();
 }

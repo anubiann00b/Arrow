@@ -14,7 +14,7 @@ public class EnemyPlayer extends BaseEntity {
     }
 
     @Override
-    public boolean update(double delta, List<Obstacle> obstacles) {
+    public boolean update(double delta, List<Obstacle> obstacles, List<Obstacle> powerups) {
         return false;
     }
 }

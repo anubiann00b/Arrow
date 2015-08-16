@@ -35,7 +35,7 @@ public abstract class BaseEntity {
         bitmapFont = new BitmapFont();
     }
 
-    public abstract boolean update(double delta, List<Obstacle> obstacles);
+    public abstract boolean update(double delta, List<Obstacle> obstacles, List<Obstacle> powerups);
 
     public void render(SpriteBatch batch, double delta, OrthographicCamera camera, boolean dispboard, int i) {
         sprite.setDirection(dir);

@@ -19,6 +19,8 @@ public class Player extends BaseEntity {
 
     private PlayerInputMethod inputMethod;
     public AttackBow attackBow;
+    public int powerup;
+    public double powerupStartTime;
 
     public Player(PlayerInputMethod inputMethod) {
         super("player", "player"+Integer.toString(random(10000)));
@@ -30,8 +32,8 @@ public class Player extends BaseEntity {
     }
 
     @Override
-    public boolean update(double delta, List<Obstacle> obstacles) {
-        updatePosition(inputMethod.getMovement(), obstacles, delta);
+    public boolean update(double delta, List<Obstacle> obstacles, List<Obstacle> powerups) {
+        updatePosition(inputMethod.getMovement(), obstacles, powerups, delta);
         handleAttack(inputMethod.getAttack(), delta);
         return false;
     }
@@ -40,7 +42,7 @@ public class Player extends BaseEntity {
         return new Box(pos, WIDTH, HEIGHT);
     }
 
-    private void updatePosition(CartesianPosition movement, List<Obstacle> obstacles, double delta) {
+    private void updatePosition(CartesianPosition movement, List<Obstacle> obstacles, List<Obstacle> powerups, double delta) {
         CartesianPosition dpos = movement.scale((float) (delta * speed));
 
         CartesianPosition savedPos = pos;
@@ -48,6 +50,12 @@ public class Player extends BaseEntity {
         for (Obstacle o : obstacles) {
             if (CollisionDetector.hasCollided(this.getBox(),o.getBox())) {
                 pos = savedPos;
+                break;
+            }
+        }
+        for (Obstacle p : powerups) {
+            if (CollisionDetector.hasCollided(this.getBox(),p.getBox())) {
+                powerups.remove(p);
                 break;
             }
         }
