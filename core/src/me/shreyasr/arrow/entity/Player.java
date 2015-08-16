@@ -1,13 +1,21 @@
 package me.shreyasr.arrow.entity;
 
+import java.util.List;
+
 import me.shreyasr.arrow.entity.attack.AttackBow;
 import me.shreyasr.arrow.input.PlayerInputMethod;
+import me.shreyasr.arrow.CollisionDetector;
+import me.shreyasr.arrow.Box;
+import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.util.CartesianPosition;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 
 
 public class Player extends BaseEntity {
+
+    private static final float WIDTH = 10*4;
+    private static final float HEIGHT = 16*4;
 
     private PlayerInputMethod inputMethod;
     AttackBow attackBow;
@@ -22,16 +30,27 @@ public class Player extends BaseEntity {
     }
 
     @Override
-    public boolean update(double delta) {
-        updatePosition(inputMethod.getMovement(), delta);
+    public boolean update(double delta, List<Obstacle> obstacles) {
+        updatePosition(inputMethod.getMovement(), obstacles, delta);
         handleAttack(inputMethod.getAttack(), delta);
         return false;
     }
 
-    private void updatePosition(CartesianPosition movement, double delta) {
-        CartesianPosition dpos = movement.scale((float)(delta*speed));
+    public Box getBox() {
+        return new Box(pos, WIDTH, HEIGHT);
+    }
 
+    private void updatePosition(CartesianPosition movement, List<Obstacle> obstacles, double delta) {
+        CartesianPosition dpos = movement.scale((float) (delta * speed));
+
+        CartesianPosition savedPos = pos;
         pos = pos.add(dpos);
+        for (Obstacle o : obstacles) {
+            if (CollisionDetector.hasCollided(this.getBox(),o.getBox())) {
+                pos = savedPos;
+                break;
+            }
+        }
 
         if (dpos.x == 0 && dpos.y == 0) {
             sprite.notMoving();

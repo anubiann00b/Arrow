@@ -9,14 +9,20 @@ public class Obstacle {
 
     private Image image;
     private CartesianPosition position;
-    private int width;
-    private int height;
+    private float width;
+    private float height;
+    private static final float SCALE = 8.0f;
 
     public Obstacle(String filename, int x, int y) {
-        this.width = 16;
-        this.height = 16;
+        //hardcoded for badTree.png size at the moment
+        this.width = 16*SCALE;
+        this.height = 32*SCALE;
         this.image = new Image(filename);
         this.position = new CartesianPosition(x, y);
+    }
+
+    public me.shreyasr.arrow.Box getBox() {
+        return new me.shreyasr.arrow.Box(position, width, height);
     }
 
     public CartesianPosition getPosition() {
@@ -27,11 +33,11 @@ public class Obstacle {
         this.position = position;
     }
 
-    public int getWidth(){
+    public float getWidth(){
         return  width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
@@ -40,6 +46,6 @@ public class Obstacle {
     }
 
     public void render(SpriteBatch batch) {
-        image.render(batch, position);
+        image.render(batch, position, SCALE);
     }
 }

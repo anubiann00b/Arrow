@@ -16,7 +16,7 @@ public class Projectile {
     private CartesianPosition position;
     private CartesianPosition startPos;
     private PolarVelocity velocity;
-    private  long beginningTime;
+    private long beginningTime;
     private Image image;
 
     public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition,

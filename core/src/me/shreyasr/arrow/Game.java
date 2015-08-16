@@ -26,6 +26,7 @@ import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.projectiles.Projectile;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
+import me.shreyasr.arrow.util.ObstacleGenerator;
 
 public class Game extends ApplicationAdapter {
 
@@ -33,7 +34,7 @@ public class Game extends ApplicationAdapter {
     SpriteBatch batch;
     List<BaseEntity> entities;
     public static List<Projectile> projectiles = new ArrayList<Projectile>();
-    public List<Obstacle> obstacles;
+    public static List<Obstacle> obstacles;
     PlayerInputMethod inputMethod;
     InputMultiplexer inputMultiplexer;
     public static OrthographicCamera camera;
@@ -55,13 +56,17 @@ public class Game extends ApplicationAdapter {
         batch = new SpriteBatch();
         player = new Player(inputMethod);
         entities = new ArrayList<BaseEntity>();
-        player = new Player(inputMethod);
         shapeRenderer = new ShapeRenderer();
         entities.add(player);
         inputMethod.setPlayer(player);
         tileImage = new Image("grass");
 
-
+        obstacles = new ArrayList<Obstacle>();
+        obstacles.addAll(ObstacleGenerator.generate("badTree", 50, 100, 5000,
+                100, 5000));
+        for (Obstacle o : obstacles) {
+            System.out.println(o.getPosition().x + " " + o.getPosition().y);
+        }
 
         inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -79,7 +84,11 @@ public class Game extends ApplicationAdapter {
             delta = (double) 60/Gdx.graphics.getFramesPerSecond();
 
         for (BaseEntity entity : entities) {
-            entity.update(delta);
+            entity.update(delta, obstacles);
+        }
+
+        for (Obstacle obstacle : obstacles) {
+            obstacle.update();
         }
 
         for (Iterator<Projectile> iterator = projectiles.iterator(); iterator.hasNext(); ) {
@@ -105,17 +114,25 @@ public class Game extends ApplicationAdapter {
             i++;
         }
 
+        for (Obstacle o : obstacles) {
+            o.render(batch);
+        }
+
         for (Projectile p : projectiles) {
             p.render(batch);
         }
+
         batch.end();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         for (BaseEntity entity : entities) {
             entity.renderstatus(shapeRenderer);
         }
+
     }
-        private void updateCamera() {
+
+
+    private void updateCamera() {
         float minX = Constants.SCREEN.x / 2;
         float maxX = Constants.WORLD.x - minX;
         float minY = Constants.SCREEN.y / 2;

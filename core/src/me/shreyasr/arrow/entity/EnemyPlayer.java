@@ -1,5 +1,9 @@
 package me.shreyasr.arrow.entity;
 
+import java.util.List;
+
+import me.shreyasr.arrow.obstacles.Obstacle;
+
 public class EnemyPlayer extends BaseEntity {
 
     public final int id;
@@ -10,7 +14,7 @@ public class EnemyPlayer extends BaseEntity {
     }
 
     @Override
-    public boolean update(double delta) {
+    public boolean update(double delta, List<Obstacle> obstacles) {
         return false;
     }
 }

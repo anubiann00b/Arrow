@@ -16,6 +16,7 @@ import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import me.shreyasr.arrow.model.ObstacleModel;
 import me.shreyasr.arrow.model.PlayerModel;
 import me.shreyasr.arrow.model.ProjectileModel;
 import me.shreyasr.arrow.model.util.CartesianPosition;
@@ -27,6 +28,7 @@ public class ClientManager {
     private final List<Client> clients = new ArrayList<Client>();
     private final Map<Integer, PlayerModel> players = new HashMap<Integer, PlayerModel>();
     private final Map<Integer, ProjectileModel> projectiles = new HashMap<Integer, ProjectileModel>();
+    private final Map<Integer, ObstacleModel> obstacles = new HashMap<Integer, ObstacleModel>();
     private final Queue<byte[]> packetQueue = new LinkedBlockingQueue<byte[]>();
     public final AtomicInteger clientCounter = new AtomicInteger();
     private static final int DAMAGE = 5;
@@ -116,7 +118,7 @@ public class ClientManager {
                     //calculate damage taken and update model
                     int damageTaken = 0;
                     for (ProjectileModel projectile : projectiles.values()) {
-                        if (PlayerProjectileCollisionDetector.hasCollided(player,
+                        if (ProjectileCollisionDetector.hasCollided(player,
                                 projectile)) {
                             damageTaken += DAMAGE;
                             projectiles.remove(projectile.projectileID);
@@ -138,6 +140,7 @@ public class ClientManager {
             @Override
             public void onReceive(int playerId, int projectileId, int startX, int startY,
                                   long startTime, double direction, int speed) {
+                //so we would get here if a new projectile was shot
                 Projectile projectile = new Projectile(new PolarVelocity(direction, speed), new CartesianPosition(startX, startY));
                 ProjectileModel projectileModel = new ProjectileModel(projectileId, playerId, projectile);
                 projectiles.put(projectileId, projectileModel);
@@ -145,6 +148,8 @@ public class ClientManager {
         });
         packetRouter.collisionPacketHandler.addListener(new CollisionPacketHandler.Listener() {
           public void onReceive(int projectileID, int playerID, int hitPlayerID)   {
+              //the server is responsible for discovering projectile collisions, so would it send a
+              //packet to itself?
               packetQueue.add(CollisionPacketHandler.encodePacket(projectileID, playerID, hitPlayerID));
           }
         });
