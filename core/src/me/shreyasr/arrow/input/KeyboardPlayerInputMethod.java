@@ -40,6 +40,9 @@ public class KeyboardPlayerInputMethod extends PlayerInputMethod {
             case Input.Keys.ENTER:
                 Game.change_name();
                 break;
+            case Input.Keys.TAB:
+                Game.toggledisp();
+                break;
         }
         return false;
     }
@@ -54,6 +57,9 @@ public class KeyboardPlayerInputMethod extends PlayerInputMethod {
             return keyDown(Input.Keys.D);
         else if (keycode == Input.Keys.D)
             return keyDown(Input.Keys.A);
+        if (keycode == Input.Keys.TAB){
+            Game.toggledisp();
+        }
         return false;
     }
 
