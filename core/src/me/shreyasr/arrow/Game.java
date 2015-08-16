@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -21,24 +22,28 @@ import me.shreyasr.arrow.entity.Player;
 import me.shreyasr.arrow.graphics.Image;
 import me.shreyasr.arrow.input.PlayerInputMethod;
 import me.shreyasr.arrow.network.NetworkHandler;
+import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.projectiles.Projectile;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
 
 public class Game extends ApplicationAdapter {
 
+    BitmapFont font;
     SpriteBatch batch;
     List<BaseEntity> entities;
     public static List<Projectile> projectiles = new ArrayList<Projectile>();
+    public List<Obstacle> obstacles;
     PlayerInputMethod inputMethod;
     InputMultiplexer inputMultiplexer;
     public static OrthographicCamera camera;
     public static Player player;
     Image tileImage;
-    ShapeRenderer healthbar;
+    ShapeRenderer shapeRenderer;
     NetworkHandler networkHandler;
     final String ip;
     Queue<Runnable> runnableQueue = new LinkedBlockingQueue<Runnable>();
+    static boolean dispboard = false;
 
     public Game(PlayerInputMethod inputMethod, String ip) {
         this.inputMethod = inputMethod;
@@ -51,10 +56,12 @@ public class Game extends ApplicationAdapter {
         player = new Player(inputMethod);
         entities = new ArrayList<BaseEntity>();
         player = new Player(inputMethod);
-        healthbar = new ShapeRenderer();
+        shapeRenderer = new ShapeRenderer();
         entities.add(player);
         inputMethod.setPlayer(player);
         tileImage = new Image("grass");
+
+
 
         inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -92,24 +99,23 @@ public class Game extends ApplicationAdapter {
         batch.begin();
 
         renderWorld();
-
+        int i = 0;
         for (BaseEntity entity : entities) {
-            entity.render(batch, delta);
+            entity.render(batch, delta, camera,dispboard , i);
+            i++;
         }
 
         for (Projectile p : projectiles) {
             p.render(batch);
         }
-
         batch.end();
 
-        healthbar.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         for (BaseEntity entity : entities) {
-            entity.renderstatus(healthbar);
+            entity.renderstatus(shapeRenderer);
         }
     }
-
-    private void updateCamera() {
+        private void updateCamera() {
         float minX = Constants.SCREEN.x / 2;
         float maxX = Constants.WORLD.x - minX;
         float minY = Constants.SCREEN.y / 2;
@@ -135,14 +141,16 @@ public class Game extends ApplicationAdapter {
         }
     }
 
+    /* Doesn't work properly at the moment... */
     public static void change_name(){
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
-            public void input (String text) {
-                player.name =  text;
+            public void input(String text) {
+                player.name = text;
             }
+
             @Override
-            public void canceled () {
+            public void canceled() {
 
             }
         }, "New player name?", player.name, "");
@@ -153,6 +161,11 @@ public class Game extends ApplicationAdapter {
     }
 
     List<Integer> protectedIds = new ArrayList<Integer>();
+
+    public static void toggledisp(){
+        if (dispboard) dispboard=false;
+        else dispboard=true;
+    }
 
     private void setUpNetworkHandler() {
         networkHandler = new NetworkHandler(ip,

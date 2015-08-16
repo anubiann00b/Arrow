@@ -120,6 +120,10 @@ public class ClientManager {
                                 projectile)) {
                             damageTaken += DAMAGE;
                             projectiles.remove(projectile.projectileID);
+                            System.out.println("hit");
+                        }
+                        else {
+                            System.out.println("miss");
                         }
                         //but client is still rendering projectile
                     }
@@ -138,6 +142,11 @@ public class ClientManager {
                 ProjectileModel projectileModel = new ProjectileModel(projectileId, playerId, projectile);
                 projectiles.put(projectileId, projectileModel);
             }
+        });
+        packetRouter.collisionPacketHandler.addListener(new CollisionPacketHandler.Listener() {
+          public void onReceive(int projectileID, int playerID, int hitPlayerID)   {
+              packetQueue.add(CollisionPacketHandler.encodePacket(projectileID, playerID, hitPlayerID));
+          }
         });
     }
 }
