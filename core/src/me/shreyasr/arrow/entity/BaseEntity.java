@@ -30,7 +30,7 @@ public abstract class BaseEntity {
         sprite = new EntitySprite(filePrefix, 166, 64);
         pos = new CartesianPosition(50, 50);
         this.name = name;
-        health = 80;
+        health = 100;
         score = 0;
         bitmapFont = new BitmapFont();
     }

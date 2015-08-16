@@ -93,7 +93,7 @@ public class Game extends ApplicationAdapter {
 
         for (Iterator<Projectile> iterator = projectiles.iterator(); iterator.hasNext(); ) {
             Projectile p = iterator.next();
-            boolean keep = p.update();
+            boolean keep = p.update(obstacles);
             if (!keep) iterator.remove();
         }
 
