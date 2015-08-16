@@ -42,8 +42,8 @@ public abstract class BaseEntity {
         /* If you want the name at the bottom */
         bitmapFont.draw(batch, name, pos.x - bitmapFont.getSpaceWidth() * name.length() * 2, pos.y - sprite.getHeight() / 2 - 2);
         if(dispboard){
-            bitmapFont.draw(batch, name, camera.position.x - Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 -i*10);
-            bitmapFont.draw(batch, Float.toString(score), camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 - i*10);
+            bitmapFont.draw(batch, name, camera.position.x - Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 -i*15);
+            bitmapFont.draw(batch, Float.toString(score), camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 - i*15);
         }
     }
 

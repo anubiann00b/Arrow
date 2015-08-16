@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
@@ -95,6 +97,15 @@ public class Game extends ApplicationAdapter {
         batch.begin();
 
         renderWorld();
+
+
+        Collections.sort(entities, new Comparator<BaseEntity>() {
+
+            public int compare(BaseEntity p1, BaseEntity p2) {
+                return p2.score - p1.score;
+            }
+        });
+
         int i = 0;
         for (BaseEntity entity : entities) {
             entity.render(batch, delta, camera,dispboard , i);
