@@ -1,18 +1,16 @@
 package me.shreyasr.arrow.obstacles;
 
-import me.shreyasr.arrow.entity.BaseEntity;
+import me.shreyasr.arrow.entity.Player;
 
 /**
  * Very simple class..
  */
-public final class PlayerObstacleCollisionDetector {
+public final class CollisionDetector {
 
     private static final int WIDTH = 10*4;
     private static final int HEIGHT = 16*4;
 
-    private PlayerObstacleCollisionDetector() {}
-
-    public boolean hasCollided(BaseEntity player, Obstacle obstacle) {
+    public boolean hasCollided(Player player, Obstacle obstacle) {
         float playerLeft = player.pos.x;
         float playerBot = player.pos.y;
         float playerRight = player.pos.x + WIDTH;
@@ -22,9 +20,9 @@ public final class PlayerObstacleCollisionDetector {
         float obstacleBot = obstacle.getPosition().y;
         float obstacleTop = obstacle.getPosition().y + obstacle.getHeight();
         return playerLeft < obstacleRight &&
-                playerRight > obstacleLeft &&
-                playerBot < obstacleTop &&
-                playerTop > obstacleBot;
+        playerRight > obstacleLeft &&
+        playerBot < obstacleTop &&
+        playerTop > obstacleBot;
     }
 
     public boolean hasCollided(Obstacle o1, Obstacle o2) {

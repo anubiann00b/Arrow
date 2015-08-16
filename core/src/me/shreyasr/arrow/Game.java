@@ -145,11 +145,12 @@ public class Game extends ApplicationAdapter {
     public static void change_name(){
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
-            public void input (String text) {
-                player.name =  text;
+            public void input(String text) {
+                player.name = text;
             }
+
             @Override
-            public void canceled () {
+            public void canceled() {
 
             }
         }, "New player name?", player.name, "");
