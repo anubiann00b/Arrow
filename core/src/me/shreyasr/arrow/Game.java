@@ -338,7 +338,13 @@ public class Game extends ApplicationAdapter {
                 @Override
                 public void onReceive(final int killerId, final int victimId) {
                     if (networkHandler.clientId == victimId) {
-
+                        runnableQueue.offer(new Runnable() {
+                            @Override
+                            public void run() {
+                                entities.get(victimId).death++;
+                                entities.remove(victimId);
+                            }
+                        });
                     }
 
                     runnableQueue.offer(new Runnable() {
