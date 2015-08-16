@@ -310,7 +310,7 @@ public class Game extends ApplicationAdapter {
                 }
             }, new DeathPacketHandler.Listener() {
                 @Override
-                public void onReceive(int killerId, int victimId) {
+                public void onReceive(final int killerId, final int victimId) {
                     if (networkHandler.clientId == victimId) {
 
                     }
@@ -318,7 +318,9 @@ public class Game extends ApplicationAdapter {
                     runnableQueue.offer(new Runnable() {
                         @Override
                         public void run() {
-                            // do any data changing here
+                            entities.get(victimId).death++;
+                            entities.get(killerId).kill++;
+                            entities.remove(victimId);
                         }
                     });
                 }
