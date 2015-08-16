@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -27,6 +28,7 @@ import me.shreyasr.arrow.util.MathHelper;
 
 public class Game extends ApplicationAdapter {
 
+    BitmapFont font;
     SpriteBatch batch;
     List<BaseEntity> entities;
     public static List<Projectile> projectiles = new ArrayList<Projectile>();
@@ -100,7 +102,6 @@ public class Game extends ApplicationAdapter {
         for (Projectile p : projectiles) {
             p.render(batch);
         }
-
         batch.end();
 
         healthbar.setProjectionMatrix(camera.combined);
