@@ -1,19 +1,25 @@
 package me.shreyasr.arrow.model;
 
-import me.shreyasr.arrow.model.util.Projectile;
+import me.shreyasr.arrow.model.util.CartesianPosition;
+import me.shreyasr.arrow.model.util.PolarVelocity;
 
 public class ProjectileModel {
 
-    public final int projectileID;
-    private Projectile projectile;
-    public final int playerID;
     private static final int LENGTH = 16*4;
     private static final int CENTER_X = 7*4;
     private static final int CENTER_Y = 7*4;
 
-    public ProjectileModel(int projectileID, int playerID,
-                           Projectile projectile) {
-        this.projectile = projectile;
+    public final int projectileID;
+    public final int playerID;
+    public CartesianPosition startPos;
+    public PolarVelocity velocity;
+    public long beginningTime;
+
+    public ProjectileModel(int projectileID, int playerID, long beginningTime,
+                           PolarVelocity velocity, CartesianPosition startPos) {
+        this.velocity = velocity;
+        this.startPos = startPos;
+        this.beginningTime = beginningTime;
         this.projectileID = projectileID;
         this.playerID = playerID;
     }
@@ -30,24 +36,10 @@ public class ProjectileModel {
         return CENTER_Y;
     }
 
-    public void updateProjectile() {
-        projectile.update();
+    public CartesianPosition calculatePosition(long time) {
+        return new CartesianPosition(
+                (float)(startPos.x + (time-beginningTime)*velocity.getSpeed()*Math.cos(velocity.getDirection())/100f),
+                (float)(startPos.y + (time-beginningTime)*velocity.getSpeed()*Math.sin(velocity.getDirection())/100f)
+        );
     }
-
-    public double getDirection() {
-        return projectile.getVelocity().getDirection();
-    }
-
-    public float getSpeed() {
-        return projectile.getVelocity().getSpeed();
-    }
-
-    public float getX() {
-        return projectile.getPosition().x;
-    }
-
-    public float getY() {
-        return projectile.getPosition().y;
-    }
-
 }

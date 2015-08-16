@@ -89,8 +89,10 @@ public class AttackBow implements Attack {
         if (timer<0 && !target.isEmpty()) {
             double startDir = target.getDir() - spread * spreadShots /2;
             for(int i=0;i< spreadShots;i++) {
-                Game.projectiles.add(new Projectile(new PolarVelocity((float)(startDir + i * spread), (float) speed),
-                        Game.player.pos, "arrow"));
+                Game.inst.addProjectile(
+                        new Projectile(
+                                new PolarVelocity((float) (startDir + i * spread), (float) speed),
+                                Game.player.pos, "arrow", System.currentTimeMillis(), -1));
             }
             if (shotCounter <= 0) {
                 timer = reloadTime;

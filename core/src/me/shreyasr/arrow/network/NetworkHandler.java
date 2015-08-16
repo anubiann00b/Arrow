@@ -8,9 +8,12 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import me.shreyasr.arrow.CollisionPacketHandler;
 import me.shreyasr.arrow.PacketRouter;
 import me.shreyasr.arrow.PlayerPacketHandler;
+import me.shreyasr.arrow.ProjectilePacketHandler;
 import me.shreyasr.arrow.entity.Player;
+import me.shreyasr.arrow.projectiles.Projectile;
 
 public class NetworkHandler implements Runnable {
 
@@ -21,7 +24,10 @@ public class NetworkHandler implements Runnable {
     Socket tcpSocket;
     DatagramSocket socket;
 
-    public NetworkHandler(String ipAddress, PlayerPacketHandler.Listener playerPacketListener) {
+    public NetworkHandler(String ipAddress,
+                          PlayerPacketHandler.Listener playerPacketListener,
+                          ProjectilePacketHandler.Listener projectilePacketListener,
+                          CollisionPacketHandler.Listener collisionPacketHandler) {
         this.ipAddress = ipAddress;
         try {
             inetAddress = InetAddress.getByName(ipAddress);
@@ -29,6 +35,8 @@ public class NetworkHandler implements Runnable {
             Log.exception(e);
         }
         router.playerPacketHandler.addListener(playerPacketListener);
+        router.projectilePacketHandler.addListener(projectilePacketListener);
+        router.collisionPacketHandler.addListener(collisionPacketHandler);
     }
 
     @Override
@@ -71,9 +79,20 @@ public class NetworkHandler implements Runnable {
     public void update(Player p) {
         if (socket == null) return;
         if (clientId == -1) return;
+        byte[] data = PlayerPacketHandler
+                .encodePacket(clientId, p.health, (int) p.pos.x, (int) p.pos.y, p.dir);
+        send(data);
+    }
+
+    public void sendProjectile(Projectile p) {
+        byte[] data = ProjectilePacketHandler.encodePacket(clientId, p.id,
+                (int)p.startPos.x, (int)p.startPos.y, p.beginningTime,
+                p.velocity.getDirection(), (int)p.velocity.getSpeed());
+        send(data);
+    }
+
+    private synchronized void send(byte[] data) {
         try {
-            byte[] data = PlayerPacketHandler
-                    .encodePacket(clientId, p.health, (int) p.pos.x, (int) p.pos.y, p.dir);
             socket.send(new DatagramPacket(data, data.length, inetAddress, 9998));
         } catch (IOException e) {
             Log.exception(e);

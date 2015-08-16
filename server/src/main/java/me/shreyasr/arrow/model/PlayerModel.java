@@ -4,7 +4,7 @@ public class PlayerModel {
 
     public final int playerId;
     private int score;
-    public int health;
+    public int health = 100;
     public int x;
     public int y;
     public int direction;

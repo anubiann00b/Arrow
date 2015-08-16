@@ -2,30 +2,35 @@ package me.shreyasr.arrow.projectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import me.shreyasr.arrow.graphics.Image;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.PolarVelocity;
 
 public class Projectile {
 
-    //for now we can start with one type of projectile, if we get around
-    //to other types we can change this into an interface or abstract class
+    private static final AtomicInteger counter = new AtomicInteger();
 
-//    private final float width;
-//    private final float height;
     private CartesianPosition position;
-    private CartesianPosition startPos;
-    private PolarVelocity velocity;
-    private  long beginningTime;
     private Image image;
 
+    public final CartesianPosition startPos;
+    public final PolarVelocity velocity;
+    public final long beginningTime;
+    public final int id;
+
     public Projectile(PolarVelocity pPolarVelocity, CartesianPosition pPosition,
-                      String imgFileLocation) {
+                      String imgFileLocation, long startTime, int tid) {
         velocity = pPolarVelocity;
         startPos = pPosition;
         position = pPosition;
-        beginningTime = System.currentTimeMillis();
+        beginningTime = startTime;
         image = new Image(imgFileLocation);
+        if (tid == -1)
+            id = counter.incrementAndGet();
+        else
+            id = tid;
     }
 
     public CartesianPosition getPosition() {
@@ -38,8 +43,7 @@ public class Projectile {
 
     /** True to keep, false to leave. */
     public boolean update() {
-        long currentTime = System.currentTimeMillis();
-        long timePassed = currentTime - beginningTime;
+        long timePassed = System.currentTimeMillis() - beginningTime;
         float newX = startPos.x + (float) (velocity.getSpeed()*Math.cos(velocity.getDirection())*timePassed/100f);
         float newY = startPos.y + (float) (velocity.getSpeed()*Math.sin(velocity.getDirection())*timePassed/100f);
         position = new CartesianPosition(newX, newY);
