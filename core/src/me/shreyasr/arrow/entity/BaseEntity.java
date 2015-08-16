@@ -1,7 +1,10 @@
 package me.shreyasr.arrow.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -23,7 +26,6 @@ public abstract class BaseEntity {
     public String name;
     public int health;
     public int score;
-    ShapeRenderer healthbar;
     BitmapFont bitmapFont;
 
     public BaseEntity(String filePrefix, String name) {
@@ -44,9 +46,14 @@ public abstract class BaseEntity {
         //dispname.draw(batch, name, pos.x-sprite.getWidth()/2, pos.y + sprite.getHeight() / 2+20);
         /* If you want the name at the bottom */
         bitmapFont.draw(batch, name, pos.x - bitmapFont.getSpaceWidth() * name.length() * 2, pos.y - sprite.getHeight() / 2 - 2);
+        if(i==0){
+            Pixmap pixmap = new Pixmap(Gdx.files.internal("crown.png"));
+            Texture crown = new Texture(pixmap);
+            batch.draw(crown, pos.x-crown.getWidth()/6, pos.y+sprite.getHeight()/2, sprite.getWidth()/2, sprite.getWidth()/2);
+        }
         if(dispboard){
             bitmapFont.draw(batch, name, camera.position.x - Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 -i*15);
-            bitmapFont.draw(batch, Float.toString(score), camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 - i*15);
+            bitmapFont.draw(batch, Float.toString(health), camera.position.x + Constants.SCREEN.x / 5, camera.position.y + Constants.SCREEN.y / 3 - i*15);
         }
     }
 
