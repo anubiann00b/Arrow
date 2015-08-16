@@ -21,6 +21,7 @@ import me.shreyasr.arrow.entity.Player;
 import me.shreyasr.arrow.graphics.Image;
 import me.shreyasr.arrow.input.PlayerInputMethod;
 import me.shreyasr.arrow.network.NetworkHandler;
+import me.shreyasr.arrow.obstacles.Obstacle;
 import me.shreyasr.arrow.projectiles.Projectile;
 import me.shreyasr.arrow.util.CartesianPosition;
 import me.shreyasr.arrow.util.MathHelper;
@@ -30,6 +31,7 @@ public class Game extends ApplicationAdapter {
     SpriteBatch batch;
     List<BaseEntity> entities;
     public static List<Projectile> projectiles = new ArrayList<Projectile>();
+    public List<Obstacle> obstacles;
     PlayerInputMethod inputMethod;
     InputMultiplexer inputMultiplexer;
     public static OrthographicCamera camera;
