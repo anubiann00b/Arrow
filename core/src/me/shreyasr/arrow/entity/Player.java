@@ -4,6 +4,7 @@ import java.util.List;
 
 import me.shreyasr.arrow.Box;
 import me.shreyasr.arrow.CollisionDetector;
+import me.shreyasr.arrow.Game;
 import me.shreyasr.arrow.entity.attack.AttackBow;
 import me.shreyasr.arrow.input.PlayerInputMethod;
 import me.shreyasr.arrow.obstacles.Obstacle;
@@ -54,6 +55,7 @@ public class Player extends BaseEntity {
         }
         for (Obstacle p : powerups) {
             if (CollisionDetector.hasCollided(this.getBox(),p.getBox())) {
+                Game.addMessage("Acquired powerup");
                 int x = p.getPowerup();
                 if (x==1){
                     attackBow.setPowerup(x);

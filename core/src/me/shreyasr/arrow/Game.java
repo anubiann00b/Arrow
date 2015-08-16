@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -52,6 +53,7 @@ public class Game extends ApplicationAdapter {
     final String ip;
     Queue<Runnable> runnableQueue = new LinkedBlockingQueue<Runnable>();
     static boolean dispboard = false;
+    public static Queue<String> messageQueue = new LinkedBlockingQueue<String>();
 
     public Game(PlayerInputMethod inputMethod, String ip) {
         this.inputMethod = inputMethod;
@@ -64,6 +66,13 @@ public class Game extends ApplicationAdapter {
         networkHandler.sendProjectile(p);
     }
 
+    public static void addMessage(String s) {
+        if (messageQueue.size() == 10) {
+            messageQueue.poll();
+        }
+        messageQueue.add(s);
+    }
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -73,6 +82,8 @@ public class Game extends ApplicationAdapter {
         entities.add(player);
         inputMethod.setPlayer(player);
         tileImage = new Image("grass");
+        font = new BitmapFont();
+        font.setColor(Color.GREEN);
 
         obstacles = new ArrayList<Obstacle>();
         obstacles.addAll(ObstacleGenerator.generate("badTree", 25, 100, 5000,
@@ -88,6 +99,8 @@ public class Game extends ApplicationAdapter {
         inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer);
         inputMultiplexer.addProcessor(inputMethod);
+
+        messageQueue.add("Welcome to Arrow!");
 
         camera = new OrthographicCamera(Constants.SCREEN.x*768f/Constants.SCREEN.y, 768);
 
@@ -154,6 +167,7 @@ public class Game extends ApplicationAdapter {
             p.render(batch);
         }
 
+        renderQueue();
         batch.end();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -200,6 +214,15 @@ public class Game extends ApplicationAdapter {
         camera.update();
     }
 
+    private void renderQueue() {
+        int i = 0;
+        for (String s : messageQueue) {
+            font.draw(batch, s, camera.position.x - Constants.SCREEN.x/2 - 64,
+                    camera.position.y + Constants.SCREEN.y/2 + 64 - i*20);
+            i++;
+        }
+    }
+
     private void renderWorld() {
         float cx = camera.position.x;
         float cy = camera.position.y;
@@ -215,6 +238,7 @@ public class Game extends ApplicationAdapter {
     }
 
     public static void change_name(){
+
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
             public void input(String text) {
@@ -224,6 +248,8 @@ public class Game extends ApplicationAdapter {
 
             @Override public void canceled() { }
         }, "New player name?", player.name, "");
+
+        addMessage("Changed name to " + player.name);
     }
 
     public static CartesianPosition getCameraPos() {
